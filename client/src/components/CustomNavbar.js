@@ -1,6 +1,6 @@
 // Importovanie potrebných modulov z Reactu
 import React from "react";
-import { BrowserRouter as Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "../css/CustomNavbar.css"; // Import štýlov pre navbar
 
 // Komponenta pre navigačný panel

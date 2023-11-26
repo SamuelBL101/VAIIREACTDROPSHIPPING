@@ -1,4 +1,4 @@
-import React from "react"; 
+/*import React from "react"; 
 import "../css/style.css"; 
 const CategoryList = () =>
 { return (
@@ -26,7 +26,34 @@ const CategoryList = () =>
     <li>
       <a href="#">Zvieratá a chovateľstvo</a>
     </li>
-    {/* Pridajte ďalšie kategórie podľa potreby */}
+    {/* Pridajte ďalšie kategórie podľa potreby }
   </ul>
 </div>
-); }; export default CategoryList;
+); }; export default CategoryList;*/
+import React from "react"; 
+import "../css/style.css"; 
+
+const categories = [
+  'Elektronika',
+  'Móda a oblečenie',
+  'Domácnosť a záhrada',
+  'Šport a outdoor',
+  'Hračky a deti',
+  'Zvieratá a chovateľstvo'
+];
+
+const CategoryList = () => (
+  <div className="category-list">
+    <h2>Kategórie</h2>
+    <ul>
+      {categories.map((category, index) => (
+        <li key={index}>
+          <a href="#">{category}</a>
+        </li>
+      ))}
+      {/* Pridajte ďalšie kategórie podľa potreby */}
+    </ul>
+  </div>
+);
+
+export default CategoryList;

@@ -1,13 +1,12 @@
-/* Register.css */
-
-body {
+/* log.module.css */
+.login {
     font-family: Arial, sans-serif;
     background-color: #f5f5f5;
     margin: 0;
     padding: 0;
   }
   
-  .container {
+  .login-container {
     max-width: 400px;
     margin: 50px auto;
     background-color: #fff;
@@ -16,21 +15,21 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   }
   
-  h2 {
+  .login h2 {
     text-align: center;
     color: #333;
   }
   
-  form {
+  .login form {
     display: flex;
     flex-direction: column;
   }
   
-  label {
+  .login label {
     margin: 10px 0;
   }
   
-  input {
+  .login input {
     width: 100%;
     padding: 10px;
     margin-top: 5px;
@@ -40,7 +39,7 @@ body {
     border-radius: 4px;
   }
   
-  button {
+  .login button {
     background-color: #4caf50;
     color: #fff;
     padding: 10px;
@@ -49,17 +48,17 @@ body {
     cursor: pointer;
   }
   
-  button:hover {
-    background-color: #45a049;
+  .login button:hover {
+    background-color: #a04566;
   }
   
   /* Responsive Design */
   @media screen and (max-width: 600px) {
-    .container {
+    .login-container {
       max-width: 100%;
     }
   
-    input {
+    .login input {
       margin-bottom: 15px;
     }
   }

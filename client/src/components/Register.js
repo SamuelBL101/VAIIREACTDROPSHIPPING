@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Axios from 'axios';
-//import "../css/reg.css"; // 
-
-
+import styles from "../css/reg.module.css"; 
 
 const Register = () => {
   const [username, setUsername] = useState("");
@@ -12,55 +10,59 @@ const Register = () => {
 
   const submitRegistration = () => {
     Axios.post("http://localhost:3001/api/insert", {
-    username: username ,
-    email:email,
-    password:password
+      username: username,
+      email: email,
+      password: password
     }).then(() => {
-      alert("Succesfull insert");
+      alert("Successful insert");
     });
   };
 
   return (
-    <div>
-      <h2>Registrácia</h2>
-      <form>
-        <label>
+    <div className={styles.registration}>
+      <h2 className={styles["registration-h2"]}>Registrácia</h2>
+      <form className={styles["registration-form"]}>
+        <label className={styles["registration-label"]}>
           Užívateľské meno:
           <input
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            className={styles["registration-input"]}
           />
         </label>
         <br />
-        <label>
+        <label className={styles["registration-label"]}>
           Email:
           <input
             type="text"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            className={styles["registration-input"]}
           />
         </label>
         <br />
-        <label>
+        <label className={styles["registration-label"]}>
           Heslo:
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            className={styles["registration-input"]}
           />
         </label>
         <br />
-        <label>
+        <label className={styles["registration-label"]}>
           Potvrdenie hesla:
           <input
             type="password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
+            className={styles["registration-input"]}
           />
         </label>
         <br />
-        <button type="button" onClick={submitRegistration} >
+        <button type="button" onClick={submitRegistration} className={styles["registration-button"]}>
           Registrovať sa
         </button>
       </form>

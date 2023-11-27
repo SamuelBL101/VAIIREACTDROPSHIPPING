@@ -40,17 +40,37 @@ app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
-app.post('/api/insert',(req,res)=>{
+app.post('/api/insert', (req, res) => {
+    const username = req.body.username;
+    const email = req.body.email;
+    const password = req.body.password;
 
-    const username = req.body.username
-    const email = req.body.email
-    const password = req.body.password
-
-    const sqlInsert ="INSERT INTO user_inf (username, email, password) VALUES (?, ?, ?);"
-    db.query(sqlInsert, [username,email, password], (err, result)=>{
-        console.log(result);
-    })
-})
+    // Check if email or username already exists
+    const sqlCheck = "SELECT * FROM user_inf WHERE email = ? OR username = ?";
+    db.query(sqlCheck, [email, username], (err, result) => {
+        if (err) {
+            console.log(err);
+            res.status(500).send("Internal Server Error");
+        } else {
+            // If result array is not empty, email or username already exists
+            if (result.length > 0) {
+                res.status(400).send("Email or username already exists");
+            } else {
+                // If result array is empty, insert new record
+                const sqlInsert = "INSERT INTO user_inf (username, email, password) VALUES (?, ?, ?);";
+                db.query(sqlInsert, [username, email, password], (err, result) => {
+                    if (err) {
+                        console.log(err);
+                        res.status(500).send("Internal Server Error");
+                    } else {
+                        console.log(result);
+                        res.status(200).send("User inserted successfully");
+                    }
+                });
+            }
+        }
+    });
+});
 
 app.listen(3001, () => {
     console.log("Running on port 3001");

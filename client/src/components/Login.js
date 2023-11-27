@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import styles from "../css/log.module.css";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -11,7 +12,7 @@ const Login = () => {
   };
 
   return (
-    <div>
+    <div className={styles.login}>
       <h2>Prihlásenie</h2>
       <form>
         <label>

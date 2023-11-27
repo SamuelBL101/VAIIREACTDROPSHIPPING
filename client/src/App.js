@@ -10,7 +10,7 @@ import Cart from "./components/Cart"
 function App() {
   return (
     <Router>
-    <div className="App">
+      <div className="App">
         <CustomNavbar />
         <Routes>
           {/* Používejte Route pro definování cest */}
@@ -19,7 +19,7 @@ function App() {
           <Route path="/Register" element={<Register />} />
           <Route path="/Cart" element={<Cart />} />
         </Routes>
-    </div>
+      </div>
     </Router>
   );
 }

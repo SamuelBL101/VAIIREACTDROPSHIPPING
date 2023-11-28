@@ -1,76 +1,66 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import '../css/style.css';
+import Axios from "axios";
 
-const Product = ({ imgSrc, altText, title, price }) => {
+import { useContext } from 'react'; // Import useContext
+
+const Product = ({ id, title, price, imgSrc }) => {
+
+  const handleAddToCart = () => {
+    // Assuming you have user_id available, replace 'user_id' with the actual user_id value
+    const user_id = '5'; // Replace with your actual user_id
+  
+    Axios.post('http://localhost:3001/api/addToCart', {
+      user_id,
+      product_id: id,
+      quantity: 1, // You may adjust the quantity as needed
+    })
+      .then((response) => {
+        console.log(response.data); // Handle success
+      })
+      .catch((error) => {
+        console.error('Error adding to cart:', error); // Handle error
+      });
+  };
+  
+
   return (
     <div className="product">
-      <img src={imgSrc} alt={altText} className="product-image" />
+      <img src={imgSrc} alt={title} className="product-image" />
       <h3>{title}</h3>
       <p>Cena: {price}</p>
-      <button className="add-to-cart-button">Pridať do košíka</button>
+      <button className="add-to-cart-button" onClick={handleAddToCart}>Pridať do košíka</button>
     </div>
   );
 };
 
 const ProductList = () => {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    Axios.get('http://localhost:3001/api/products')
+      .then((response) => {
+        setProducts(response.data);
+      })
+      .catch((error) => {
+        console.error('Error fetching products:', error);
+      });
+  }, []);
+
   return (
     <div className="products">
-      <Product
-        imgSrc="/data/img/img.png"
-        altText="Produkt 1"
-        title="Keramický hrnček so vzorom"
-        price="5.99€"
-      />
-      <Product
-        imgSrc="data/img/img_1.png"
-        altText="Produkt 2"
-        title="Kuchynske utierky (3 kusy)"
-        price="3.49€"
-      />
-      <Product
-        imgSrc="data/img/img_2.png"
-        altText="Produkt 3"
-        title="Drevená krabica na šperky"
-        price="7.99€"
-      />
-      <Product
-        imgSrc="data/img/img_3.png"
-        altText="Produkt 4"
-        title="Gélové pero s čiernym atramentom"
-        price="1.99€"
-      />
-      <Product
-        imgSrc="data/img/img_4.png"
-        altText="Produkt 5"
-        title="Biela keramická váza"
-        price="4.49€"
-      />
-      <Product
-        imgSrc="data/img/img_5.png"
-        altText="Produkt 6"
-        title="Ponožky (10 párov)"
-        price="8.99€"
-      />
-      <Product
-        imgSrc="data/img/img_6.png"
-        altText="Produkt 7"
-        title="Plážový slnečník"
-        price="6.29€"
-      />
-      <Product
-        imgSrc="data/img/img_7.png"
-        altText="Produkt 8"
-        title="Svietiaca LED sviečka"
-        price="2.79€"
-      />
-      <Product
-        imgSrc="data/img/img_8.png"
-        altText="Produkt 9"
-        title="Malá taška s remienkom"
-        price="9.49€"
-      />
+      {products.map(product => (
+        <Product
+        key={product.product_id}
+        id={product.product_id}
+        title={product.product_name}
+        price={product.price}
+        imgSrc={product.imgSrc}
+        />
+      ))}
     </div>
-  );
+    
+  ); 
 };
 
 export default ProductList;

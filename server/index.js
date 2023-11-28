@@ -13,29 +13,6 @@ const db = mysql.createPool({
     database: 'dbvaii',
 });
 
-/*app.get("/", (req, res) => {
-    // Sample data to insert
-    const userData = {
-        email: 'usfener@fgmaifl.com',
-        password: 'heslicko',
-        dateOfBirth: '2001-09-10', // Format date as 'YYYY-MM-DD'
-    };
-
-    // SQL query to insert data into the user_inf table
-    const sqlInsert = "INSERT INTO user_inf (email, password, dateOfBirth) VALUES (?, ?, ?);";
-
-    // Execute the query with user data
-    db.query(sqlInsert, [userData.email, userData.password, userData.dateOfBirth], (err, result) => {
-        if (err) {
-            console.error("Error inserting into the database:", err);
-            res.status(500).send("Internal Server Error");
-        } else {
-            console.log("Inserted into the database successfully");
-            res.send("Data inserted into the database successfully");
-        }
-    });
-});
-*/
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -92,6 +69,33 @@ app.post('/api/login', (req, res) => {
         }
     });
 });
+
+app.get('/api/products', (req, res) => {
+    const sqlSelect = "SELECT * FROM products";
+    db.query(sqlSelect, (err, result) => {
+        if (err) {
+            console.log(err);
+            res.status(500).json({ message: "Internal Server Error" });
+        } else {
+            //res.status(200).json(result);
+            res.send(result);
+        }
+    });
+});
+
+app.post('/api/addToCart', (req, res) => {
+    const { user_id, product_id, quantity } = req.body;
+  
+    const sqlInsert = 'INSERT INTO cart (user_id, product_id, quantity) VALUES (?, ?, ?)';
+    db.query(sqlInsert, [user_id, product_id, quantity], (err, result) => {
+      if (err) {
+        console.log(err);
+        res.status(500).json({ message: 'Internal Server Error' });
+      } else {
+        res.status(200).json({ message: 'Product added to cart successfully' });
+      }
+    });
+  });
 
 
 app.listen(3001, () => {

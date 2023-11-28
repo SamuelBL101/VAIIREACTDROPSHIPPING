@@ -50,27 +50,49 @@ app.post('/api/insert', (req, res) => {
     db.query(sqlCheck, [email, username], (err, result) => {
         if (err) {
             console.log(err);
-            res.status(500).send("Internal Server Error");
+            res.status(500).json({ message: "Internal Server Error" });
         } else {
             // If result array is not empty, email or username already exists
             if (result.length > 0) {
-                res.status(400).send("Email or username already exists");
+                res.status(400).json({ message: "Email or username already exists" });
             } else {
                 // If result array is empty, insert new record
                 const sqlInsert = "INSERT INTO user_inf (username, email, password) VALUES (?, ?, ?);";
                 db.query(sqlInsert, [username, email, password], (err, result) => {
                     if (err) {
                         console.log(err);
-                        res.status(500).send("Internal Server Error");
+                        res.status(500).json({ message: "Internal Server Error" });
                     } else {
                         console.log(result);
-                        res.status(200).send("User inserted successfully");
+                        res.status(200).json({ message: "User inserted successfully" });
                     }
                 });
             }
         }
     });
 });
+app.post('/api/login', (req, res) => {
+    const username = req.body.username;
+    const password = req.body.password;
+
+    // SQL query to check if the provided username and password match
+    const sqlLogin = "SELECT * FROM user_inf WHERE username = ? AND password = ?";
+    db.query(sqlLogin, [username, password], (err, result) => {
+        if (err) {
+            console.log(err);
+            res.status(500).json({ message: "Internal Server Error" });
+        } else {
+            // If result array is not empty, username and password are correct
+            if (result.length > 0) {
+                res.status(200).json({ message: "Login successful" });
+            } else {
+                // If result array is empty, username or password is incorrect
+                res.status(401).json({ message: "Invalid username or password" });
+            }
+        }
+    });
+});
+
 
 app.listen(3001, () => {
     console.log("Running on port 3001");

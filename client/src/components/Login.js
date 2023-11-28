@@ -1,14 +1,27 @@
 import React, { useState } from "react";
+import Axios from "axios";
 import { Link } from "react-router-dom";
 import styles from "../css/log.module.css";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
 
   const handleLogin = () => {
-    // Implementujte logiku pre prihlásenie
-    console.log("Prihlásenie:", { username, password });
+    Axios.post("http://localhost:3001/api/login", {
+      username: username,
+      password: password,
+    })
+      .then((response) => {
+        alert("Login successful");
+        // Handle successful login, e.g., redirect to a new page
+      })
+      .catch((error) => {
+        setError("Invalid username or password");
+        alert(error.response.data.message);
+      });
   };
 
   return (

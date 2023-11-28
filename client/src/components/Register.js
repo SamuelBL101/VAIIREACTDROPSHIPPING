@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Axios from 'axios';
 import styles from "../css/reg.module.css"; 
 
@@ -9,12 +9,21 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const submitRegistration = () => {
+    if (password !== confirmPassword) {
+      alert("Passwords do not match!");
+      return;
+    }
+
     Axios.post("http://localhost:3001/api/insert", {
-      username: username,
-      email: email,
-      password: password
-    }).then(() => {
-      alert("Successful insert");
+      username,
+      email,
+      password
+    })
+    .then((response) => {
+      alert(response.data.message);
+    })
+    .catch((error) => {
+      alert(error.response.data.message);
     });
   };
 
@@ -31,7 +40,6 @@ const Register = () => {
             className={styles["registration-input"]}
           />
         </label>
-        <br />
         <label className={styles["registration-label"]}>
           Email:
           <input
@@ -41,7 +49,6 @@ const Register = () => {
             className={styles["registration-input"]}
           />
         </label>
-        <br />
         <label className={styles["registration-label"]}>
           Heslo:
           <input
@@ -51,7 +58,6 @@ const Register = () => {
             className={styles["registration-input"]}
           />
         </label>
-        <br />
         <label className={styles["registration-label"]}>
           Potvrdenie hesla:
           <input
@@ -61,7 +67,6 @@ const Register = () => {
             className={styles["registration-input"]}
           />
         </label>
-        <br />
         <button type="button" onClick={submitRegistration} className={styles["registration-button"]}>
           Registrovať sa
         </button>

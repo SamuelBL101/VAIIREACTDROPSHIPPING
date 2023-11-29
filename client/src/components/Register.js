@@ -14,7 +14,7 @@ const Register = () => {
       return;
     }
 
-    Axios.post("http://localhost:3001/api/insert", {
+    Axios.post("http://localhost:3001/api/insertUser", {
       username,
       email,
       password

@@ -7,16 +7,20 @@ import { useContext } from 'react'; // Import useContext
 const Product = ({ id, title, price, imgSrc }) => {
 
   const handleAddToCart = () => {
-    // Assuming you have user_id available, replace 'user_id' with the actual user_id value
-    const user_id = '5'; // Replace with your actual user_id
-  
-    Axios.post('http://localhost:3001/api/addToCart', {
-      user_id,
-      product_id: id,
-      quantity: 1, // You may adjust the quantity as needed
-    })
+    Axios.post(
+      'http://localhost:3001/api/addToCart',
+      {
+        product_id: id,
+        quantity: 1,
+      },
+      {
+        headers: {
+          'x-access-token': localStorage.getItem('token'),
+        },
+      }
+    )
       .then((response) => {
-        console.log(response.data); // Handle success
+        console.log(response.data.message); // Handle success
       })
       .catch((error) => {
         console.error('Error adding to cart:', error); // Handle error

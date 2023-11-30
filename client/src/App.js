@@ -6,29 +6,25 @@ import Home from "./components/Home";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import Cart from "./components/Cart";
+import { AuthProvider, useAuth } from "react-auth-verification-context";
 
 function App() {
-  const [loginStatus, setLoginStatus] = useState("false");
-
-  useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    if (storedToken) {
-      setLoginStatus("true");
-    }
-  }, []);
+  
 
   return (
+    <AuthProvider>
     <Router>
       <div className="App">
         <CustomNavbar />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/Login" element={<Login setLoginStatus={setLoginStatus} />} />
+          <Route path="/Login" element={<Login />} />
           <Route path="/Register" element={<Register />} />
           <Route path="/Cart" element={<Cart />} />
         </Routes>
       </div>
     </Router>
+    </AuthProvider>
   );
 }
 

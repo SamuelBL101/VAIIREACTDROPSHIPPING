@@ -1,8 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Axios from 'axios';
 import styles from "../css/reg.module.css"; 
+import { useAuth } from 'react-auth-verification-context';
+
+
+  
 
 const Register = () => {
+  const { isAuthenticated, attributes } = useAuth();
+
+  useEffect(() => {
+    console.log("Is Authenticated:", isAuthenticated);
+    console.log("User Information:", attributes);
+  }, [isAuthenticated, attributes]);
+
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -71,6 +82,13 @@ const Register = () => {
           Registrovať sa
         </button>
       </form>
+      <div>
+      {isAuthenticated ? (
+          <p>User {attributes?.id} is logged in</p>
+        ) : (
+          <p>User is not logged in</p>
+        )}
+    </div>
     </div>
   );
 };

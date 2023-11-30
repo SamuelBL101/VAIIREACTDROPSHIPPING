@@ -77,24 +77,18 @@ app.post('/api/login', (req, res) => {
     // SQL query to check if the provided username and password match
     const sqlLogin = "SELECT * FROM user_inf WHERE username = ? AND password = ?";
     db.query(sqlLogin, [username, password], (err, result) => {
-        if (err) {
-            console.log(err);
-            res.status(500).json({ message: "Internal Server Error" });
+    if (err) {
+        console.log(err);
+        res.status(500).json({ message: "Internal Server Error" });
+    } else {
+        if (result.length > 0) {
+            const id = result[0].user_id;
+            const token = jwt.sign({ id }, "jwSecret", { expiresIn: 300 });
+            res.json({ auth: true, token: token, user: result[0] });
         } else {
-            // If result array is not empty, username and password are correct
-            if (result.length > 0) {
-                // Create a JWT token
-                const id = result[0].id;
-                const token = jwt.sign({ id }, "jwSecret", {
-                    expiresIn: 300,
-                });
-                // Send the JWT token to the client
-                res.json({ auth: true, token: token, result: result });
-            } else {
-                // If result array is empty, username or password is incorrect
-                res.json({ auth: false, message: "Invalid username or password" });
-            }
+            res.json({ auth: false, message: "Invalid username or password" });
         }
+    }
     });
 });
 

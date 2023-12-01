@@ -1,30 +1,37 @@
 import React, { useEffect, useState } from 'react';
 import '../css/style.css';
 import Axios from "axios";
-
+import { useAuth } from 'react-auth-verification-context'; // Import useAuth
 import { useContext } from 'react'; // Import useContext
 
 const Product = ({ id, title, price, imgSrc }) => {
+  const { isAuthenticated, attributes } = useAuth(); // Use useAuth hook to get user information
 
   const handleAddToCart = () => {
-    Axios.post(
-      'http://localhost:3001/api/addToCart',
-      {
-        product_id: id,
-        quantity: 1,
-      },
-      {
-        headers: {
-          'x-access-token': localStorage.getItem('token'),
+    if (isAuthenticated) {
+      Axios.post(
+        'http://localhost:3001/api/addToCart',
+        {
+          product_id: id,
+          quantity: 1,
+          user_id: attributes?.id, // Include user ID in the request payload
         },
-      }
-    )
-      .then((response) => {
-        console.log(response.data.message); // Handle success
-      })
-      .catch((error) => {
-        console.error('Error adding to cart:', error); // Handle error
-      });
+        {
+          headers: {
+            'x-access-token': localStorage.getItem('token'),
+          },
+        }
+      )
+        .then((response) => {
+          console.log(response.data.message); // Handle success
+        })
+        .catch((error) => {
+          console.error('Error adding to cart:', error); // Handle error
+        });
+    } else {
+      // Handle case where the user is not authenticated
+      console.log('User is not authenticated. Please log in.');
+    }
   };
   
 

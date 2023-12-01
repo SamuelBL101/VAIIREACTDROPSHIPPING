@@ -107,23 +107,118 @@ app.get('/api/products', (req, res) => {
 });
 
 app.post('/api/addToCart', verifyJWT, (req, res) => {
-  
     const user_id = req.userId;
     const product_id = req.body.product_id;
     const quantity = req.body.quantity;
-
-    const sqlInsert = 'INSERT INTO cart (user_id, product_id, quantity) VALUES (?, ?, ?)';
-    db.query(sqlInsert, [user_id, product_id, quantity], (err, result) => {
-        if (err) {
-            console.error('Error inserting into cart:', err);
-            res.status(500).json({ message: 'Internal Server Error' });
-          } else {
-            console.log('Insert result:', result);
-            res.status(200).json({ message: 'Product added to cart successfully', result });
-          }
+  
+    // Check if the combination of user_id and product_id already exists in the cart
+    const checkIfExistsQuery = 'SELECT * FROM cart WHERE user_id = ? AND product_id = ?';
+    db.query(checkIfExistsQuery, [user_id, product_id], (checkErr, checkResult) => {
+      if (checkErr) {
+        console.error('Error checking if product exists in cart:', checkErr);
+        res.status(500).json({ message: 'Internal Server Error' });
+      } else {
+        if (checkResult.length > 0) {
+          // If the combination exists, update the quantity
+          const existingQuantity = checkResult[0].quantity;
+          const newQuantity = existingQuantity + quantity;
+  
+          const updateQuantityQuery = 'UPDATE cart SET quantity = ? WHERE user_id = ? AND product_id = ?';
+          db.query(updateQuantityQuery, [newQuantity, user_id, product_id], (updateErr, updateResult) => {
+            if (updateErr) {
+              console.error('Error updating quantity in cart:', updateErr);
+              res.status(500).json({ message: 'Internal Server Error' });
+            } else {
+              console.log('Quantity updated successfully:', updateResult);
+              res.status(200).json({ message: 'Quantity updated successfully', result: updateResult });
+            }
+          });
+        } else {
+          // If the combination doesn't exist, insert a new row
+          const insertQuery = 'INSERT INTO cart (user_id, product_id, quantity) VALUES (?, ?, ?)';
+          db.query(insertQuery, [user_id, product_id, quantity], (insertErr, insertResult) => {
+            if (insertErr) {
+              console.error('Error inserting into cart:', insertErr);
+              res.status(500).json({ message: 'Internal Server Error' });
+            } else {
+              console.log('Insert result:', insertResult);
+              res.status(200).json({ message: 'Product added to cart successfully', result: insertResult });
+            }
+          });
+        }
+      }
+    });
+  });
+  app.get('/api/getCartItems', (req, res) => {
+    const user_id = req.query.user_id; // Use req.query to get the user_id from the query parameters
+  
+    // SQL query to get the cart items for the specified user_id
+    const sqlGetCart = 'SELECT * FROM cart WHERE user_id = ?';
+    db.query(sqlGetCart, [user_id], (err, result) => {
+      if (err) {
+        console.error('Error fetching cart items:', err);
+        res.status(500).json({ message: 'Internal Server Error' });
+      } else {
+        res.send(result);
+      }
     });
   });
 
+  app.get('/api/getProductDetails/:id', (req, res) => {
+    const product_id = req.params.id;
+  
+    const sqlGetProductDetails = 'SELECT * FROM products WHERE product_id = ?';
+    db.query(sqlGetProductDetails, [product_id], (err, result) => {
+      if (err) {
+        console.error('Error fetching product details:', err);
+        res.status(500).json({ message: 'Internal Server Error' });
+      } else {
+        res.status(200).json(result[0]); // Assuming there is only one product with the given ID
+      }
+    });
+  });
+  app.post('/api/updateCartItemQuantity', (req, res) => {
+    const user_id = req.body.user_id; // Assuming you send user_id from the client
+    const product_id = req.body.product_id;
+    const amount = req.body.amount; // This can be +1 or -1
+  
+    // Check if the cart item exists for the given user and product
+    const sqlCheckCartItem = 'SELECT * FROM cart WHERE user_id = ? AND product_id = ?';
+    db.query(sqlCheckCartItem, [user_id, product_id], (err, result) => {
+      if (err) {
+        console.error('Error checking cart item:', err);
+        res.status(500).json({ message: 'Internal Server Error' });
+      } else {
+        if (result.length === 0) {
+          // Cart item doesn't exist, insert a new row
+          const sqlInsert = 'INSERT INTO cart (user_id, product_id, quantity) VALUES (?, ?, ?)';
+          db.query(sqlInsert, [user_id, product_id, amount], (err, result) => {
+            if (err) {
+              console.error('Error inserting into cart:', err);
+              res.status(500).json({ message: 'Internal Server Error' });
+            } else {
+              res.status(200).json({ message: 'Cart item updated successfully', result });
+            }
+          });
+        } else {
+          // Cart item exists, update the quantity
+          const currentQuantity = result[0].quantity;
+          const newQuantity = Math.max(0, currentQuantity + amount); // Ensure the quantity is non-negative
+  
+          const sqlUpdate = 'UPDATE cart SET quantity = ? WHERE user_id = ? AND product_id = ?';
+          db.query(sqlUpdate, [newQuantity, user_id, product_id], (err, result) => {
+            if (err) {
+              console.error('Error updating cart item:', err);
+              res.status(500).json({ message: 'Internal Server Error' });
+            } else {
+              res.status(200).json({ message: 'Cart item updated successfully', result });
+            }
+          });
+        }
+      }
+    });
+  });
+      
 
 app.listen(3001, () => {
     console.log("Running on port 3001");

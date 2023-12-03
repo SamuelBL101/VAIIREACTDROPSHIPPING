@@ -219,6 +219,51 @@ app.post('/api/addToCart', verifyJWT, (req, res) => {
     });
   });
       
+ app.get('/api/updateUsername', (req, res) => {
+    const user_id = req.query.user_id; 
+    const username = req.query.username;
+    const sqlUpdate = 'UPDATE user_inf SET username = ? WHERE user_id = ?';
+    db.query(sqlUpdate, [username, user_id], (err, result) => {
+      if (err) {
+        console.error('Error updating username:', err);
+        res.status(500).json({ message: 'Internal Server Error' });
+      } else {
+        res.status(200).json({ message: 'Username updated successfully', result });
+      }
+    });
+  }
+ );
+ 
+  app.get('/api/updateEmail', (req, res) => {
+    const user_id = req.query.user_id;
+    const email = req.query.email;
+    const sqlUpdate = 'UPDATE user_inf SET email = ? WHERE user_id = ?';
+    db.query(sqlUpdate, [email, user_id], (err, result) => {
+      if (err) {
+        console.error('Error updating email:', err);
+        res.status(500).json({ message: 'Internal Server Error' });
+      } else {
+        res.status(200).json({ message: 'Email updated successfully', result });
+      }
+    });
+  }
+  );
+
+  app.get('/api/updatePassword', (req, res) => {
+    const user_id = req.query.user_id;
+    const password = req.query.password;
+    const sqlUpdate = 'UPDATE user_inf SET password = ? WHERE user_id = ?';
+    db.query(sqlUpdate, [password, user_id], (err, result) => {
+      if (err) {
+        console.error('Error updating password:', err);
+        res.status(500).json({ message: 'Internal Server Error' });
+      } else {
+        res.status(200).json({ message: 'Password updated successfully', result });
+      }
+    });
+  }
+  );
+
 
 app.listen(3001, () => {
     console.log("Running on port 3001");

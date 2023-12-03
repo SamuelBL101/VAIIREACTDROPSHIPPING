@@ -2,9 +2,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "../css/CustomNavbar.css"; // Import štýlov pre navbar
+import { useAuth } from 'react-auth-verification-context'; // Import useAuth
+
 
 // Komponenta pre navigačný panel
 const CustomNavbar = () => {
+  const { isAuthenticated, attributes } = useAuth(); // Use useAuth hook to get user information
+
   return (
     <nav className="navbar">
       <div className="container">
@@ -12,6 +16,7 @@ const CustomNavbar = () => {
         <Link to="/" className="navbar-logo">
           SalesCounter
         </Link>
+
         {/* Vyhľadávacie pole */}
         <div className="navbar-search">
           <input type="text" placeholder="Vyhľadať" />
@@ -23,9 +28,15 @@ const CustomNavbar = () => {
           <Link to="/" className="navbar-link">
             Home
           </Link>
-          <Link to="/Login" className="navbar-link">
-            User
-          </Link>
+          {isAuthenticated ? (
+            <Link to="/Profile" className="navbar-link">
+              Profile
+            </Link>
+          ) : (
+            <Link to="/Login" className="navbar-link">
+              Login
+            </Link>
+          )}
           <Link to="/Cart" className="navbar-link">
             Cart
           </Link>

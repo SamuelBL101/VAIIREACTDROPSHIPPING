@@ -6,6 +6,7 @@ import Home from "./components/Home";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import Cart from "./components/Cart";
+import Profile from "./components/Profile";
 import { AuthProvider, useAuth } from "react-auth-verification-context";
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
           <Route path="/Login" element={<Login />} />
           <Route path="/Register" element={<Register />} />
           <Route path="/Cart" element={<Cart />} />
+          <Route path="/Profile" element={<Profile />} />
         </Routes>
       </div>
     </Router>

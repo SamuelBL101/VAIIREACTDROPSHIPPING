@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from 'react-auth-verification-context';
-import Axios from "axios";
+import Axios from 'axios';
 
 const Profile = () => {
   const [name, setName] = useState('');
@@ -8,25 +8,16 @@ const Profile = () => {
   const [password, setPassword] = useState('');
   const [currentUsername, setCurrentUsername] = useState('Current Username');
   const [currentEmail, setCurrentEmail] = useState('Current Email');
-  const { isAuthenticated, attributes } = useAuth(); // Use useAuth hook to get user information
+  const { isAuthenticated, attributes } = useAuth();
 
+  useEffect(() => {
+    // Set initial values for name and email
+    setCurrentUsername(attributes.username);
+    setCurrentEmail(attributes.email);
+  }, [attributes]);
 
   const handleNameChange = (e) => {
-    Axios.post(
-        'http://localhost:3001/api/updateUsername',
-        {
-            user_id: attributes.id,
-            username: name,
-        },
-        )
-        .then((response) => {
-            console.log(response.data.message); // Handle success
-            setCurrentUsername(name);
-        })
-        .catch((error) => {
-            console.error('Error updating username:', error); // Handle error
-        });
-
+    setName(e.target.value);
   };
 
   const handleEmailChange = (e) => {
@@ -39,40 +30,83 @@ const Profile = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if(name.length > 0){
-        handleNameChange();
+
+    // Check if any field has changed
+    if (name !== attributes.username) {
+      Axios.post(
+        'http://localhost:3001/api/updateUsername',
+        {
+          user_id: attributes.id,
+          username: name,
+        }
+      )
+        .then((response) => {
+          console.log(response.data.message);
+          setCurrentUsername(name);
+        })
+        .catch((error) => {
+          console.error('Error updating username:', error);
+        });
     }
-    if(email.length > 0){
-        handleEmailChange();
+
+    if (email !== attributes.email) {
+      // Handle email change
+      Axios.post(
+        'http://localhost:3001/api/updateEmail',
+        {
+          user_id: attributes.id,
+          email,
+        }
+      )
+        .then((response) => {
+          console.log(response.data.message);
+          setCurrentEmail(email);
+        })
+        .catch((error) => {
+          console.error('Error updating email:', error);
+        });
     }
-    if(password.length > 0){
-        handlePasswordChange();
+
+    if (password.length > 0) {
+      // Handle password change
+      Axios.post(
+        'http://localhost:3001/api/updatePassword',
+        {
+          user_id: attributes.id,
+          password,
+        }
+      )
+        .then((response) => {
+          console.log(response.data.message);
+        })
+        .catch((error) => {
+          console.error('Error updating password:', error);
+        });
     }
-    
   };
 
   return (
     <div>
       <h1>Profile Settings</h1>
-      <p>Username: {attributes.username}</p>
-      <p>Email: {attributes.email}</p>
+      <p>Username: {currentUsername}</p>
+      <p>Email: {currentEmail}</p>
       <form onSubmit={handleSubmit}>
         <label>
           Name:
-          <input type="text" value={name}  />
+          <input type="text" value={name} onChange={handleNameChange} />
         </label>
         <br />
         <label>
           Email:
-          <input type="email" value={email}  />
+          <input type="email" value={email} onChange={handleEmailChange} />
         </label>
         <br />
         <label>
           Password:
-          <input type="password" value={password}  />
+          <input type="password" value={password} onChange={handlePasswordChange} />
         </label>
         <br />
-        <button type="submit" onClick={handleSubmit}>Save</button>
+        <button type="submit">Save</button>
       </form>
     </div>
   );

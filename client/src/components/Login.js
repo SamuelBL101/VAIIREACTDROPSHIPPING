@@ -29,6 +29,7 @@ const Login = () => {
             email: user.email,
             id: user.user_id,
           });
+          Link.push("/");
         } else {
           alert("Invalid username or password");
         }

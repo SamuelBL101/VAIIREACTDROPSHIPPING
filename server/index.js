@@ -219,9 +219,9 @@ app.post('/api/addToCart', verifyJWT, (req, res) => {
     });
   });
       
- app.get('/api/updateUsername', (req, res) => {
-    const user_id = req.query.user_id; 
-    const username = req.query.username;
+  app.post('/api/updateUsername', (req, res) => {
+    const user_id = req.body.user_id; 
+    const username = req.body.username;
     const sqlUpdate = 'UPDATE user_inf SET username = ? WHERE user_id = ?';
     db.query(sqlUpdate, [username, user_id], (err, result) => {
       if (err) {
@@ -231,12 +231,11 @@ app.post('/api/addToCart', verifyJWT, (req, res) => {
         res.status(200).json({ message: 'Username updated successfully', result });
       }
     });
-  }
- );
- 
-  app.get('/api/updateEmail', (req, res) => {
-    const user_id = req.query.user_id;
-    const email = req.query.email;
+  });
+  
+  app.post('/api/updateEmail', (req, res) => {
+    const user_id = req.body.user_id;
+    const email = req.body.email;
     const sqlUpdate = 'UPDATE user_inf SET email = ? WHERE user_id = ?';
     db.query(sqlUpdate, [email, user_id], (err, result) => {
       if (err) {
@@ -246,12 +245,11 @@ app.post('/api/addToCart', verifyJWT, (req, res) => {
         res.status(200).json({ message: 'Email updated successfully', result });
       }
     });
-  }
-  );
-
-  app.get('/api/updatePassword', (req, res) => {
-    const user_id = req.query.user_id;
-    const password = req.query.password;
+  });
+  
+  app.post('/api/updatePassword', (req, res) => {
+    const user_id = req.body.user_id;
+    const password = req.body.password;
     const sqlUpdate = 'UPDATE user_inf SET password = ? WHERE user_id = ?';
     db.query(sqlUpdate, [password, user_id], (err, result) => {
       if (err) {
@@ -261,8 +259,7 @@ app.post('/api/addToCart', verifyJWT, (req, res) => {
         res.status(200).json({ message: 'Password updated successfully', result });
       }
     });
-  }
-  );
+  });
 
 
 app.listen(3001, () => {

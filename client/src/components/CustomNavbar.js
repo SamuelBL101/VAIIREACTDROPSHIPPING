@@ -3,6 +3,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "../css/CustomNavbar.css"; // Import štýlov pre navbar
 import { useAuth } from 'react-auth-verification-context'; // Import useAuth
+import { NavDropdown, MenuItem } from 'react-bootstrap'; // Import bootstrap komponenty
 
 
 // Komponenta pre navigačný panel

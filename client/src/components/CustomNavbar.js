@@ -3,12 +3,19 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "../css/CustomNavbar.css"; // Import štýlov pre navbar
 import { useAuth } from 'react-auth-verification-context'; // Import useAuth
-import { NavDropdown, MenuItem } from 'react-bootstrap'; // Import bootstrap komponenty
+import { NavDropdown } from 'react-bootstrap';
+import { DropdownItem as MenuItem } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css'; // Import štýlov pre bootstrap
 
 
 // Komponenta pre navigačný panel
 const CustomNavbar = () => {
-  const { isAuthenticated, attributes } = useAuth(); // Use useAuth hook to get user information
+  const { isAuthenticated, attributes, logout } = useAuth(); // Include logout in the destructuring
+
+  const handleLogout = () => {
+    // Call the logout function from useAuth
+    logout();
+  };
 
   return (
     <nav className="navbar">
@@ -38,9 +45,25 @@ const CustomNavbar = () => {
               Login
             </Link>
           )}
+          {isAuthenticated && attributes.role === 1 ? (
+            <NavDropdown title="Admin" id="basic-nav-dropdown">
+              <MenuItem href="/Admin">Admin</MenuItem>
+              <MenuItem href="/Admin/Products">Products</MenuItem>
+              <MenuItem href="/Admin/Users">Users</MenuItem>
+            </NavDropdown>
+          ) : (
+            <Link to="/Register" className="navbar-link">
+              Register
+            </Link>
+          )}
+
           <Link to="/Cart" className="navbar-link">
             Cart
           </Link>
+          <Link to="Login" className="navbar-link" onClick={handleLogout}>
+            Logout
+            
+          </Link>  
         </div>
       </div>
     </nav>

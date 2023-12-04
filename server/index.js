@@ -260,6 +260,32 @@ app.post('/api/addToCart', verifyJWT, (req, res) => {
       }
     });
   });
+  app.post('/api/getrole', (req, res)  => {	
+    const user_id = req.body.user_id;
+    const sqlSelect = "SELECT role FROM user_inf WHERE user_id = ?";
+    db.query(sqlSelect, [user_id], (err, result) => {
+        if (err) {
+            console.log(err);
+            res.status(500).json({ message: "Internal Server Error" });
+        } else {
+            //res.status(200).json(result);
+            res.send(result);
+        }
+    });
+  }
+  );
+  app.post('/api/deleteAccount', (req, res) => {
+    const user_id = req.body.user_id;
+    const sqlDelete = "DELETE FROM user_inf WHERE user_id = ?";
+    db.query(sqlDelete, [user_id], (err, result) => {
+        if (err) {
+            console.log(err);
+            res.status(500).json({ message: "Internal Server Error" });
+        } else {
+            res.status(200).json({ message: "User deleted successfully" });
+        }
+    });
+    });
 
 
 app.listen(3001, () => {

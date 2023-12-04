@@ -1,13 +1,16 @@
 import React, { useState } from "react";
 import Axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "../css/log.module.css";
 import { useAuth } from 'react-auth-verification-context';
+import { useHistory } from 'react-router-dom';
+
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { login } = useAuth();  // Removed setLoginStatus
+  const navigate = useNavigate();  // Use useNavigate instead of useHistory
 
   const handleLogin = () => {
     Axios.post("http://localhost:3001/api/login", {
@@ -28,8 +31,9 @@ const Login = () => {
             username: user.username,
             email: user.email,
             id: user.user_id,
+            role: user.role,
           });
-          Link.push("/");
+          navigate("/");  // Use navigate("/") instead of history.push("/")
         } else {
           alert("Invalid username or password");
         }
@@ -38,6 +42,11 @@ const Login = () => {
         alert("Invalid username or password");
         console.error('Error during login:', error);
       });
+  };
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleLogin();
+    }
   };
 
   return (
@@ -52,6 +61,7 @@ const Login = () => {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             autoComplete="username"
+            onKeyDown={handleKeyPress}
           />
         </label>
         <br />
@@ -63,10 +73,11 @@ const Login = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             autoComplete="current-password"
+            onKeyDown={handleKeyPress}
           />
         </label>
         <br />
-        <button type="button" onClick={handleLogin}>
+        <button type="button" onClick={handleLogin} onKeyDown={handleKeyPress}>
           Prihlásiť sa
         </button>
       </form>

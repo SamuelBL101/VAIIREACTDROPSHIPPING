@@ -33,38 +33,40 @@ const CustomNavbar = () => {
 
         {/* Navigačné odkazy */}
         <div className="navbar-links">
-          <Link to="/" className="navbar-link">
-            Home
-          </Link>
-          {isAuthenticated ? (
-            <Link to="/Profile" className="navbar-link">
-              Profile
-            </Link>
-          ) : (
-            <Link to="/Login" className="navbar-link">
-              Login
-            </Link>
-          )}
-          {isAuthenticated && attributes.role === 1 ? (
-            <NavDropdown title="Admin" id="basic-nav-dropdown">
-              <MenuItem href="/Admin">Admin</MenuItem>
-              <MenuItem href="/Admin/Products">Products</MenuItem>
-              <MenuItem href="/Admin/Users">Users</MenuItem>
-            </NavDropdown>
-          ) : (
-            <Link to="/Register" className="navbar-link">
-              Register
-            </Link>
-          )}
+  <Link to="/" className="navbar-link">
+    Home
+  </Link>
+  {isAuthenticated ? (
+    <>
+      <Link to="/Profile" className="navbar-link">
+        Profile
+      </Link>
+      {attributes.role === 1 && (
+        <NavDropdown title="Admin" id="basic-nav-dropdown">
+          <MenuItem href="/Admin">Admin</MenuItem>
+          <MenuItem href="/Admin/Products">Products</MenuItem>
+          <MenuItem href="/Admin/Users">Users</MenuItem>
+        </NavDropdown>
+      )}
+      <Link to="/Cart" className="navbar-link">
+        Cart
+      </Link>
+      <Link to="/" className="navbar-link" onClick={handleLogout}>
+        Logout
+      </Link>
+    </>
+  ) : (
+    <>
+      <Link to="/Login" className="navbar-link">
+        Login
+      </Link>
+      <Link to="/Register" className="navbar-link">
+        Register
+      </Link>
+    </>
+  )}
+</div>
 
-          <Link to="/Cart" className="navbar-link">
-            Cart
-          </Link>
-          <Link to="Login" className="navbar-link" onClick={handleLogout}>
-            Logout
-            
-          </Link>  
-        </div>
       </div>
     </nav>
   );

@@ -53,9 +53,12 @@ const Profile = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 
     // Check if any field has changed
-    if (name !== attributes.username) {
+    if (name !== attributes.username && name.length >= 6) {
       Axios.post(
         'http://localhost:3001/api/updateUsername',
         {
@@ -72,7 +75,7 @@ const Profile = () => {
         });
     }
 
-    if (email !== attributes.email) {
+    if (email !== attributes.email && emailRegex.test(email)) {
       // Handle email change
       Axios.post(
         'http://localhost:3001/api/updateEmail',
@@ -90,7 +93,7 @@ const Profile = () => {
         });
     }
 
-    if (password.length > 0) {
+    if (password !== attributes.password && passwordRegex.test(password)) {
       // Handle password change
       Axios.post(
         'http://localhost:3001/api/updatePassword',

@@ -276,16 +276,37 @@ app.post('/api/addToCart', verifyJWT, (req, res) => {
   );
   app.post('/api/deleteAccount', (req, res) => {
     const user_id = req.body.user_id;
-    const sqlDelete = "DELETE FROM user_inf WHERE user_id = ?";
-    db.query(sqlDelete, [user_id], (err, result) => {
-        if (err) {
-            console.log(err);
-            res.status(500).json({ message: "Internal Server Error" });
+
+    // Delete from the order table
+    const sqlDeleteOrders = "DELETE FROM `orders` WHERE user_id = ?";
+    db.query(sqlDeleteOrders, [user_id], (errOrders, resultOrders) => {
+        if (errOrders) {
+            console.log(errOrders);
+            res.status(500).json({ message: "Error deleting orders" });
         } else {
-            res.status(200).json({ message: "User deleted successfully" });
+            // Delete from the cart table
+            const sqlDeleteCart = "DELETE FROM cart WHERE user_id = ?";
+            db.query(sqlDeleteCart, [user_id], (errCart, resultCart) => {
+                if (errCart) {
+                    console.log(errCart);
+                    res.status(500).json({ message: "Error deleting cart items" });
+                } else {
+                    // Delete from the user_inf table
+                    const sqlDeleteUser = "DELETE FROM user_inf WHERE user_id = ?";
+                    db.query(sqlDeleteUser, [user_id], (errUser, resultUser) => {
+                        if (errUser) {
+                            console.log(errUser);
+                            res.status(500).json({ message: "Error deleting user" });
+                        } else {
+                            res.status(200).json({ message: "User deleted successfully" });
+                        }
+                    });
+                }
+            });
         }
     });
-    });
+});
+
 
 
 app.listen(3001, () => {

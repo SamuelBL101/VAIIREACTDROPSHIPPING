@@ -69,3 +69,8 @@
     margin-bottom: 15px;
   }
 }
+@media screen and (min-width: 768px) {
+  .registration-input {
+    width: calc(100% - 20px); 
+  }
+}

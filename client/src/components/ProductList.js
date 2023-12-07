@@ -14,7 +14,7 @@ const Product = ({ id, title, price, imgSrc }) => {
         {
           product_id: id,
           quantity: 1,
-          user_id: attributes?.id, // Include user ID in the request payload
+          user_id: attributes.id, // Include user ID in the request payload
         },
         {
           headers: {
@@ -27,6 +27,8 @@ const Product = ({ id, title, price, imgSrc }) => {
         })
         .catch((error) => {
           console.error('Error adding to cart:', error); // Handle error
+          console.log('Server Response:', error.response); // Log server response
+
         });
     } else {
       // Handle case where the user is not authenticated

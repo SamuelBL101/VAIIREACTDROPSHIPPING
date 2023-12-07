@@ -15,7 +15,6 @@ const Profile = () => {
 
 
   useEffect(() => {
-    // Set initial values for name and email
     setCurrentUsername(attributes.username);
     setCurrentEmail(attributes.email);
   }, [attributes]);
@@ -118,7 +117,7 @@ const Profile = () => {
       <p>Email: {currentEmail}</p>
       <form onSubmit={handleSubmit}>
         <label>
-          Name:
+          Používateľské meno:
           <input type="text" value={name} onChange={handleNameChange} />
         </label>
         <br />
@@ -128,11 +127,11 @@ const Profile = () => {
         </label>
         <br />
         <label>
-          Password:
+          Heslo:
           <input type="password" value={password} onChange={handlePasswordChange} />
         </label>
         <br />
-        <button type="submit">Save</button>
+        <button type="submit">Uložit</button>
       </form>
         <button type='button' onClick={deleteAccount} >DeleteAccount</button>
     </div>

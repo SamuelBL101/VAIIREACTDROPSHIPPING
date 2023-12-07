@@ -75,6 +75,7 @@ const Register = () => {
           .then((response) => {
             if (response.data.auth) {
               const user = response.data.user;
+              console.log(user);
               // Corrected login function call
               login({
                 username: user.username,
@@ -143,22 +144,21 @@ const Register = () => {
           />
           {!passwordsMatch && (
             <p className={styles["registration-error"]}>
-              Passwords do not match. Please enter the same passwords.
+              Heslá sa nezhodujú. Zadajte rovnaké heslá.
             </p>
           )}
           {!passwordMeetsCriteria && (
-            <p className={styles["registration-error"]}>
-              Password does not meet the criteria. Please enter a password that
-              is at least 6 characters long and contains at least one number.
+            <p className={styles["registration-error"]}>  
+              Heslo nespĺňa kritériá. Zadajte heslo, ktoré má aspoň 6 znakov a obsahuje aspoň jedno číslo.
             </p>
           )}
         </label>
         <button type="button" onClick={submitRegistration} className={styles["registration-button"]}>
-          Register
+          Registrovať sa
         </button>
       </form>
       <p>
-        Allready have an account?         <Link to="/Login">Login</Link>.
+      Už máte účet?<Link to="/Login">Prihlásiť sa</Link>.
       </p>
     </div>
   );

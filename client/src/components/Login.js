@@ -3,14 +3,14 @@ import Axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "../css/log.module.css";
 import { useAuth } from 'react-auth-verification-context';
-import { useHistory } from 'react-router-dom';
 
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { login } = useAuth();  // Removed setLoginStatus
-  const navigate = useNavigate();  // Use useNavigate instead of useHistory
+  const { login } = useAuth();  
+  const navigate = useNavigate(); 
+  const [validUsername, setValidUsername] = useState(true);
 
   const handleLogin = () => {
     Axios.post("http://localhost:3001/api/login", {
@@ -19,28 +19,30 @@ const Login = () => {
     })
       .then((response) => {
         if (response.data.auth) {
-          alert("Login successful");
+
           const token = response.data.token;
           const user = response.data.user;
-          console.log('Received token:', token);
-          console.log('Received user:', user);
-          
+
+         
           localStorage.setItem("token", token);
-          // Call the login function from useAuth
           login({
             username: user.username,
             email: user.email,
             id: user.user_id,
             role: user.role,
           });
-          navigate("/");  // Use navigate("/") instead of history.push("/")
+          navigate("/");  
         } else {
           alert("Invalid username or password");
+          setValidUsername(false);
+          return;
         }
       })
       .catch((error) => {
         alert("Invalid username or password");
         console.error('Error during login:', error);
+        setValidUsername(false);
+        return;
       });
   };
   const handleKeyPress = (e) => {
@@ -51,7 +53,7 @@ const Login = () => {
 
   return (
     <div className={styles.login}>
-      <h2>Prihlásedie</h2>
+      <h2>Prihlásenie</h2>
       <form>
         <label>
           Užívateľské meno:
@@ -77,6 +79,10 @@ const Login = () => {
           />
         </label>
         <br />
+        {!validUsername && (
+          <p className={styles["login-error"]}>Nesprávne zadané používateľské údaje</p>
+        )
+        }
         <button type="button" onClick={handleLogin} onKeyDown={handleKeyPress}>
           Prihlásiť sa
         </button>

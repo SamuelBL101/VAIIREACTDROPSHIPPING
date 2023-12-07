@@ -11,7 +11,7 @@ const jwt = require('jsonwebtoken');
 const db = mysql.createPool({
     host: 'localhost',
     user: 'root',
-    password: 'DBDropPassword', // Replace with your actual MySQL password
+    password: 'DBDropPassword', 
     database: 'dbvaii',
 });
 
@@ -50,6 +50,7 @@ app.post('/api/insertUser', (req, res) => {
         }
     });
 });
+
 const verifyJWT = (req, res, next) => {
     const token = req.headers["x-access-token"];
     if (!token) {
@@ -150,7 +151,7 @@ app.post('/api/addToCart', verifyJWT, (req, res) => {
     });
   });
   app.get('/api/getCartItems', (req, res) => {
-    const user_id = req.query.user_id; // Use req.query to get the user_id from the query parameters
+    const user_id = req.query.user_id; 
   
     // SQL query to get the cart items for the specified user_id
     const sqlGetCart = 'SELECT * FROM cart WHERE user_id = ?';
@@ -163,7 +164,7 @@ app.post('/api/addToCart', verifyJWT, (req, res) => {
       }
     });
   });
-
+  //* Get product details
   app.get('/api/getProductDetails/:id', (req, res) => {
     const product_id = req.params.id;
   
@@ -177,6 +178,7 @@ app.post('/api/addToCart', verifyJWT, (req, res) => {
       }
     });
   });
+  //* Update cart items
   app.post('/api/updateCartItemQuantity', (req, res) => {
     const user_id = req.body.user_id; // Assuming you send user_id from the client
     const product_id = req.body.product_id;
@@ -218,7 +220,7 @@ app.post('/api/addToCart', verifyJWT, (req, res) => {
       }
     });
   });
-      
+  // Update UserName    
   app.post('/api/updateUsername', (req, res) => {
     const user_id = req.body.user_id; 
     const username = req.body.username;
@@ -232,7 +234,7 @@ app.post('/api/addToCart', verifyJWT, (req, res) => {
       }
     });
   });
-  
+  //Update Email
   app.post('/api/updateEmail', (req, res) => {
     const user_id = req.body.user_id;
     const email = req.body.email;

@@ -170,46 +170,75 @@ const Cart = () => {
     setShowPayPal(true);
   };
 
-  const handlePaymentSuccess = (paypalOrder) => {
+  const handlePaymentSuccess = async (paypalOrder) => {
     console.log("Payment successful! PayPal Order details:", paypalOrder);
 
-    const user_id = attributes.id; // Replace this with your logic to get the user ID
-
+    const user_id = attributes.id;
     // Extract relevant information from the PayPal order
-    const address_line_1 =
-      paypalOrder.purchase_units[0]?.shipping?.address?.address_line_1 || "";
-    const admin_area_1 =
-      paypalOrder.purchase_units[0]?.shipping?.address?.admin_area_1 || "";
-    const admin_area_2 =
-      paypalOrder.purchase_units[0]?.shipping?.address?.admin_area_2 || "";
-    const country_code =
-      paypalOrder.purchase_units[0]?.shipping?.address?.country_code || "";
-    const postal_code =
-      paypalOrder.purchase_units[0]?.shipping?.address?.postal_code || "";
+    const address = paypalOrder.purchase_units[0]?.shipping?.address || {};
+    const {
+      address_line_1 = "",
+      admin_area_1 = "",
+      admin_area_2 = "",
+      country_code = "",
+      postal_code = "",
+    } = address;
+
     // Convert PayPal timestamp to a JavaScript Date object
     const orderdate = paypalOrder.create_time;
 
     // Calculate total cost based on purchase_units
-    const total_cost = totalCost;
+    const total_cost = totalCost.toFixed(2);
 
-    Axios.post("http://localhost:3001/api/createOrder", {
-      user_id,
-      orderdate,
-      address_line_1,
-      admin_area_2,
-      admin_area_1,
-      postal_code,
-      country_code,
-      total_cost,
-    })
-      .then((response) => {
-        const order_id = response.data.order_id;
+    try {
+      const { data } = await Axios.post(
+        "http://localhost:3001/api/createOrder",
+        {
+          user_id,
+          orderdate,
+          address_line1: address_line_1,
+          admin_area2: admin_area_2,
+          admin_area1: admin_area_1,
+          postal_code,
+          country_code,
+          total_cost,
+        }
+      );
 
-        // Continue with other steps (e.g., creating order details) if needed...
-      })
-      .catch((error) => {
-        console.error("Error creating order:", error);
-      });
+      const order_id = data.order_id;
+      console.log("Order created successfully! Order ID:", order_id);
+
+      const { data: cartData } = await Axios.get(
+        "http://localhost:3001/api/getCartItems",
+        {
+          params: {
+            user_id: attributes.id,
+          },
+        }
+      );
+
+      const cartItems2 = cartData;
+
+      // Use cartItems for further processing, e.g., creating order details
+      console.log("Cart items:", cartItems2);
+      const promises = cartItems2.map((item) =>
+        Axios.post("http://localhost:3001/api/createOrderDetails", {
+          order_id,
+          product_id: item.product_id,
+          quantity: item.quantity,
+        })
+      );
+      await Promise.all(promises);
+
+      // Remove cart items
+      const { data: deleteData } = await Axios.post(
+        "http://localhost:3001/api/removeCartItems",
+        { user_id }
+      );
+      console.log("Cart items deleted successfully:", deleteData.message);
+    } catch (error) {
+      console.error("Error processing order:", error);
+    }
   };
 
   return (

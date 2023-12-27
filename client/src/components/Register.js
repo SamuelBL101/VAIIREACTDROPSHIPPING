@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from "react";
-import Axios from 'axios';
-import styles from "../css/reg.module.css"; 
-import { useAuth } from 'react-auth-verification-context';
-import {Link, useNavigate } from 'react-router-dom';
+import Axios from "axios";
+import styles from "../css/reg.module.css";
+import { useAuth } from "react-auth-verification-context";
+import { Link, useNavigate } from "react-router-dom";
 import Login from "./Login";
-
-
-  
 
 const Register = () => {
   const { isAuthenticated, attributes } = useAuth();
@@ -26,10 +23,6 @@ const Register = () => {
   const [passwordMeetsCriteria, setPasswordMeetsCriteria] = useState(true);
   const [validEmailFormat, setValidEmailFormat] = useState(true);
   const [validUsername, setValidUsername] = useState(true);
-
-
-
-
 
   const submitRegistration = () => {
     const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
@@ -59,7 +52,6 @@ const Register = () => {
     setPasswordsMatch(true);
     setPasswordMeetsCriteria(true);
 
-
     Axios.post("http://localhost:3001/api/insertUser", {
       username,
       email,
@@ -67,7 +59,7 @@ const Register = () => {
     })
       .then((response) => {
         alert(response.data.message);
-  
+
         Axios.post("http://localhost:3001/api/login", {
           username: username,
           password: password,
@@ -84,9 +76,9 @@ const Register = () => {
                 role: user.role,
               });
             }
-  
+
             // Navigate to /profile
-            navigate('/profile');
+            navigate("/profile");
           })
           .catch((error) => {
             alert(error.response.data.message);
@@ -110,8 +102,8 @@ const Register = () => {
             className={styles["registration-input"]}
           />
           {!validUsername && (
-        <p className={styles["registration-error"]}>Enter a username.</p>
-      )}
+            <p className={styles["registration-error"]}>Enter a username.</p>
+          )}
         </label>
         <label className={styles["registration-label"]}>
           Email:
@@ -122,8 +114,10 @@ const Register = () => {
             className={styles["registration-input"]}
           />
           {!validEmailFormat && (
-        <p className={styles["registration-error"]}>Please enter a valid email.</p>
-      )}
+            <p className={styles["registration-error"]}>
+              Please enter a valid email.
+            </p>
+          )}
         </label>
         <label className={styles["registration-label"]}>
           Heslo:
@@ -148,17 +142,22 @@ const Register = () => {
             </p>
           )}
           {!passwordMeetsCriteria && (
-            <p className={styles["registration-error"]}>  
-              Heslo nespĺňa kritériá. Zadajte heslo, ktoré má aspoň 6 znakov a obsahuje aspoň jedno číslo.
+            <p className={styles["registration-error"]}>
+              Heslo nespĺňa kritériá. Zadajte heslo, ktoré má aspoň 6 znakov a
+              obsahuje aspoň jedno číslo.
             </p>
           )}
         </label>
-        <button type="button" onClick={submitRegistration} className={styles["registration-button"]}>
+        <button
+          type="button"
+          onClick={submitRegistration}
+          className={styles["registration-button"]}
+        >
           Registrovať sa
         </button>
       </form>
       <p>
-      Už máte účet?<Link to="/Login">Prihlásiť sa</Link>.
+        Už máte účet?<Link to="/Login">Prihlásiť sa</Link>.
       </p>
     </div>
   );

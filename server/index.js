@@ -141,12 +141,10 @@ app.post("/api/addToCart", verifyJWT, (req, res) => {
                 res.status(500).json({ message: "Internal Server Error" });
               } else {
                 console.log("Quantity updated successfully:", updateResult);
-                res
-                  .status(200)
-                  .json({
-                    message: "Quantity updated successfully",
-                    result: updateResult,
-                  });
+                res.status(200).json({
+                  message: "Quantity updated successfully",
+                  result: updateResult,
+                });
               }
             }
           );
@@ -163,12 +161,10 @@ app.post("/api/addToCart", verifyJWT, (req, res) => {
                 res.status(500).json({ message: "Internal Server Error" });
               } else {
                 console.log("Insert result:", insertResult);
-                res
-                  .status(200)
-                  .json({
-                    message: "Product added to cart successfully",
-                    result: insertResult,
-                  });
+                res.status(200).json({
+                  message: "Product added to cart successfully",
+                  result: insertResult,
+                });
               }
             }
           );
@@ -353,42 +349,80 @@ app.post("/api/deleteAccount", (req, res) => {
 app.post("/api/createOrder", (req, res) => {
   const {
     user_id,
-    total_cost,
+    orderdate,
     address_line1,
     admin_area2,
     admin_area1,
     postal_code,
     country_code,
+    total_cost,
   } = req.body;
-
+  console.log("Order details:", req.body);
+  console.log("Order date:", orderdate);
+  const formattedOrderDate = new Date(orderdate);
   // SQL query to insert an order into the 'orders' table
-  const sqlCreateOrder = `
-    INSERT INTO orders (user_id, total_cost, address_line1, admin_area2, admin_area1, postal_code, country_code)
-    VALUES (?, ?, ?, ?, ?, ?, ?)
-  `;
-
-  // Execute the query
+  const insertOrderQuery = `INSERT INTO orders (user_id, orderdate, address_line1, admin_area2, admin_area1, postal_code, country_code, total_cost) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
   db.query(
-    sqlCreateOrder,
+    insertOrderQuery,
     [
       user_id,
-      total_cost,
+      formattedOrderDate,
       address_line1,
       admin_area2,
       admin_area1,
       postal_code,
       country_code,
+      total_cost,
     ],
     (err, result) => {
       if (err) {
-        console.error("Error creating order:", err);
+        console.error("Error inserting order:", err);
         res.status(500).json({ message: "Internal Server Error" });
       } else {
-        // Send the newly created order ID in the response
-        res.status(200).json({ order_id: result.insertId });
+        const order_id = result.insertId;
+        res.json({ order_id, message: "Order created successfully" });
       }
     }
   );
+});
+
+app.post("/api/createOrderDetails", (req, res) => {
+  const { order_id, product_id, quantity } = req.body;
+
+  // SQL query to insert order details into the 'order_details' table
+  const insertOrderDetailsQuery = `INSERT INTO order_details (order_detail_id, product_id, quantity) VALUES (?, ?, ?)`;
+
+  db.query(
+    insertOrderDetailsQuery,
+    [order_id, product_id, quantity],
+    (err, result) => {
+      if (err) {
+        console.error("Error inserting order details:", err);
+        res.status(500).json({ message: "Internal Server Error" });
+      } else {
+        const orderDetailId = result.insertId;
+        res.json({
+          order_detail_id: orderDetailId,
+          message: "Order details created successfully",
+        });
+      }
+    }
+  );
+});
+
+app.post("/api/removeCartItems", (req, res) => {
+  const user_id = req.body.user_id;
+
+  // SQL query to delete cart items for the specified user_id
+  const sqlDeleteCartItems = "DELETE FROM cart WHERE user_id = ?";
+  db.query(sqlDeleteCartItems, [user_id], (err, result) => {
+    if (err) {
+      console.error("Error deleting cart items:", err);
+      res.status(500).json({ message: "Internal Server Error" });
+    } else {
+      res.json({ message: "Cart items deleted successfully" });
+    }
+  });
 });
 
 app.listen(3001, () => {

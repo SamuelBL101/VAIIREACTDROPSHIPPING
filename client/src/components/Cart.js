@@ -261,11 +261,11 @@ const Cart = () => {
         <h2>Order Summary</h2>
         <p>Total Quantity: {totalQuantity}</p>
         <p>Total Cost: {totalCost.toFixed(2)}€</p>
-        <button onClick={handlePayment}>Proceed to Payment</button>
+
         {showPayPal ? (
           <PayPall totalCost={totalCost} onSuccess={handlePaymentSuccess} />
         ) : (
-          <p>Click the button to complete your payment.</p>
+          <button onClick={handlePayment}>Proceed to Payment</button>
         )}
       </div>
     </div>

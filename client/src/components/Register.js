@@ -85,7 +85,10 @@ const Register = () => {
           });
       })
       .catch((error) => {
-        alert(error.response.data.message);
+        alert(
+          error.response?.data?.message ||
+            "An error occurred during registration"
+        ); // Updated to check for response property
       });
   };
 

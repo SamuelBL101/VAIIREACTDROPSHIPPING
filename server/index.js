@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const app = express();
 const mysql = require("mysql2");
+const bcrypt = require("bcrypt");
 //npm run devStart
 
 const jwt = require("jsonwebtoken");
@@ -19,14 +20,14 @@ app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.post("/api/insertUser", (req, res) => {
+app.post("/api/insertUser", async (req, res) => {
   const username = req.body.username;
   const email = req.body.email;
-  const password = req.body.password;
+  let password = req.body.password;
 
   // Check if email or username already exists
   const sqlCheck = "SELECT * FROM user_inf WHERE email = ? OR username = ?";
-  db.query(sqlCheck, [email, username], (err, result) => {
+  db.query(sqlCheck, [email, username], async (err, result) => {
     if (err) {
       console.log(err);
       res.status(500).json({ message: "Internal Server Error" });
@@ -35,6 +36,19 @@ app.post("/api/insertUser", (req, res) => {
       if (result.length > 0) {
         res.status(400).json({ message: "Email or username already exists" });
       } else {
+        const salt = await bcrypt.genSalt(10);
+        password = await bcrypt.hash(password, salt);
+        console.log("Hashed password:", this.password);
+        /*
+        bcrypt
+          .hash(password, 10)
+          .then((hashedPassword) => {
+            console.log("Hashed password:", hashedPassword);
+          })
+          .catch((error) => {
+            console.error("Error hashing password:", error);
+          });
+*/
         // If result array is empty, insert new record
         const sqlInsert =
           "INSERT INTO user_inf (username, email, password, role) VALUES (?, ?, ?, 0);";
@@ -78,18 +92,38 @@ app.post("/api/login", (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
 
-  // SQL query to check if the provided username and password match
-  const sqlLogin = "SELECT * FROM user_inf WHERE username = ? AND password = ?";
-  db.query(sqlLogin, [username, password], (err, result) => {
+  // SQL query to check if the provided username exists
+  const sqlCheckUser = "SELECT * FROM user_inf WHERE username = ?";
+  db.query(sqlCheckUser, [username], (err, result) => {
     if (err) {
       console.log(err);
       res.status(500).json({ message: "Internal Server Error" });
     } else {
       if (result.length > 0) {
-        const id = result[0].user_id;
-        const token = jwt.sign({ id }, "jwSecret", { expiresIn: 300 });
-        res.json({ auth: true, token: token, user: result[0] });
+        const hashedPassword = result[0].password;
+
+        // Compare the provided password with the stored hashed password
+        bcrypt.compare(password, hashedPassword, (bcryptErr, bcryptResult) => {
+          if (bcryptErr) {
+            console.error("Error comparing passwords:", bcryptErr);
+            res.status(500).json({ message: "Internal Server Error" });
+          } else {
+            if (bcryptResult) {
+              // Passwords match, generate a JWT token or perform other actions
+              const id = result[0].user_id;
+              const token = jwt.sign({ id }, "jwSecret", { expiresIn: 300 });
+              res.json({ auth: true, token: token, user: result[0] });
+            } else {
+              // Passwords do not match
+              res.json({
+                auth: false,
+                message: "Invalid username or password",
+              });
+            }
+          }
+        });
       } else {
+        // User with the provided username does not exist
         res.json({ auth: false, message: "Invalid username or password" });
       }
     }

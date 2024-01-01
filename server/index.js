@@ -39,16 +39,7 @@ app.post("/api/insertUser", async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         password = await bcrypt.hash(password, salt);
         console.log("Hashed password:", this.password);
-        /*
-        bcrypt
-          .hash(password, 10)
-          .then((hashedPassword) => {
-            console.log("Hashed password:", hashedPassword);
-          })
-          .catch((error) => {
-            console.error("Error hashing password:", error);
-          });
-*/
+
         // If result array is empty, insert new record
         const sqlInsert =
           "INSERT INTO user_inf (username, email, password, role) VALUES (?, ?, ?, 0);";

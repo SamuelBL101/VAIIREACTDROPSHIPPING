@@ -73,6 +73,18 @@
     width: calc(33.33% - 20px); /* Každý produkt zaberá 1/3 šírky s 10px oddeľovačom */
     margin-bottom: 20px; /* Odstup medzi produktami */
   }
+  @media screen and (max-width: 768px) {
+    .product {
+      width: calc(50% - 20px); /* Two items per row */
+    }
+  }
+  
+  /* Further adjustment for even smaller screens (adjust the breakpoint as needed) */
+  @media screen and (max-width: 480px) {
+    .product {
+      width: 100%; /* One item per row */
+    }
+  }
 
   .product-image {
     width: 225px; /* Nastavte žiadanú šírku obrázka */

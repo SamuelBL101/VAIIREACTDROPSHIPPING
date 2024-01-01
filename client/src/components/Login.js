@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "../css/log.module.css";
+import "../css/login.css";
 import { useAuth } from "react-auth-verification-context";
 
 const Login = () => {
@@ -30,13 +31,13 @@ const Login = () => {
           });
           navigate("/");
         } else {
-          alert("Invalid username or password");
+          //alert("Invalid username or password");
           setValidUsername(false);
           return;
         }
       })
       .catch((error) => {
-        alert("Invalid username or password");
+        //alert("Invalid username or password");
         console.error("Error during login:", error);
         setValidUsername(false);
         return;
@@ -49,33 +50,42 @@ const Login = () => {
   };
 
   return (
-    <div className={styles.login}>
-      <h2>Prihlásenie</h2>
+    <div className={"mainContainer"}>
+      <div className={"titleContainer"}>
+        <div>Prihlásenie</div>
+      </div>
       <form>
+        <br />
         <label>
           Užívateľské meno:
-          <input
-            id="meno"
-            type="text"
-            value={username}
-            placeholder="Zadajte užívateľské meno"
-            onChange={(e) => setUsername(e.target.value)}
-            autoComplete="username"
-            onKeyDown={handleKeyPress}
-          />
+          <div className={"inputContainer"}>
+            <input
+              id="meno"
+              type="text"
+              value={username}
+              placeholder="Zadajte užívateľské meno"
+              onChange={(e) => setUsername(e.target.value)}
+              autoComplete="username"
+              onKeyDown={handleKeyPress}
+              className={"inputBox"}
+            />
+          </div>
         </label>
         <br />
         <label className={styles.labelHeslo}>
           Heslo:
-          <input
-            id="heslo"
-            type="password"
-            value={password}
-            placeholder="Zadajte heslo"
-            onChange={(e) => setPassword(e.target.value)}
-            autoComplete="current-password"
-            onKeyDown={handleKeyPress}
-          />
+          <div className={"inputContainer"}>
+            <input
+              id="heslo"
+              type="password"
+              value={password}
+              placeholder="Zadajte heslo"
+              onChange={(e) => setPassword(e.target.value)}
+              autoComplete="current-password"
+              onKeyDown={handleKeyPress}
+              className={"inputBox"}
+            />
+          </div>
         </label>
         <br />
         {!validUsername && (
@@ -83,14 +93,19 @@ const Login = () => {
             Nesprávne zadané používateľské údaje
           </p>
         )}
-        <button type="button" onClick={handleLogin} onKeyDown={handleKeyPress}>
+        <button
+          type="button"
+          onClick={handleLogin}
+          onKeyDown={handleKeyPress}
+          className={"inputbutton"}
+        >
           Prihlásiť sa
         </button>
       </form>
 
-      <p>
+      <div className={"endContainer"}>
         Nemáte ešte účet? <Link to="/Register">Zaregistrujte sa tu</Link>.
-      </p>
+      </div>
     </div>
   );
 };

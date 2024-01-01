@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Axios from "axios";
-import styles from "../css/reg.module.css";
+import "../css/login.css";
 import { useAuth } from "react-auth-verification-context";
 import { Link, useNavigate } from "react-router-dom";
 import Login from "./Login";
@@ -93,75 +93,79 @@ const Register = () => {
   };
 
   return (
-    <div className={styles.registration}>
-      <h2 className={styles["registration-h2"]}>Registration</h2>
-      <form className={styles["registration-form"]}>
-        <label className={styles["registration-label"]}>
+    <div className={"mainContainer"}>
+      <div className={"titleContainer"}>
+        <div>Registrácia</div>
+      </div>
+      <form>
+        <br />
+        <label>
           Užívateľské meno:
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            className={styles["registration-input"]}
-          />
-          {!validUsername && (
-            <p className={styles["registration-error"]}>Enter a username.</p>
-          )}
+          <div className={"inputContainer"}>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="inputBox"
+            />
+            {!validUsername && <p>Enter a username.</p>}
+          </div>
         </label>
-        <label className={styles["registration-label"]}>
+        <br />
+        <label>
           Email:
-          <input
-            type="text"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className={styles["registration-input"]}
-          />
-          {!validEmailFormat && (
-            <p className={styles["registration-error"]}>
-              Please enter a valid email.
-            </p>
-          )}
+          <div className={"inputContainer"}>
+            <input
+              type="text"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="inputBox"
+            />
+            {!validEmailFormat && <p>Please enter a valid email.</p>}
+          </div>
         </label>
-        <label className={styles["registration-label"]}>
+        <br />
+        <label>
           Heslo:
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className={styles["registration-input"]}
-          />
+          <div className={"inputContainer"}>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="inputBox"
+            />
+          </div>
         </label>
-        <label className={styles["registration-label"]}>
+        <br />
+        <label>
           Potvrdenie hesla:
+          <br />
           <input
             type="password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            className={styles["registration-input"]}
+            className="inputBox"
           />
-          {!passwordsMatch && (
-            <p className={styles["registration-error"]}>
-              Heslá sa nezhodujú. Zadajte rovnaké heslá.
-            </p>
-          )}
+          {!passwordsMatch && <p>Heslá sa nezhodujú. Zadajte rovnaké heslá.</p>}
           {!passwordMeetsCriteria && (
-            <p className={styles["registration-error"]}>
+            <p>
               Heslo nespĺňa kritériá. Zadajte heslo, ktoré má aspoň 6 znakov a
               obsahuje aspoň jedno číslo.
             </p>
           )}
         </label>
+        <br />
         <button
           type="button"
           onClick={submitRegistration}
-          className={styles["registration-button"]}
+          className={"inputbutton"}
         >
           Registrovať sa
         </button>
       </form>
-      <p>
+      <div className={"endContainer"}>
         Už máte účet?<Link to="/Login">Prihlásiť sa</Link>.
-      </p>
+      </div>
     </div>
   );
 };

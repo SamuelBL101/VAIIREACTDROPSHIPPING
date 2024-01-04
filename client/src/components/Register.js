@@ -108,7 +108,9 @@ const Register = () => {
               onChange={(e) => setUsername(e.target.value)}
               className="inputBox"
             />
-            {!validUsername && <p>Enter a username.</p>}
+            {!validUsername && (
+              <p className={"errorLabel"}>Zadajte používateľské meno.</p>
+            )}
           </div>
         </label>
         <br />
@@ -121,7 +123,9 @@ const Register = () => {
               onChange={(e) => setEmail(e.target.value)}
               className="inputBox"
             />
-            {!validEmailFormat && <p>Please enter a valid email.</p>}
+            {!validEmailFormat && (
+              <p className={"errorLabel"}>Prosím vložte platný email.</p>
+            )}
           </div>
         </label>
         <br />
@@ -148,7 +152,7 @@ const Register = () => {
           />
           {!passwordsMatch && <p>Heslá sa nezhodujú. Zadajte rovnaké heslá.</p>}
           {!passwordMeetsCriteria && (
-            <p>
+            <p className={"errorLabel"}>
               Heslo nespĺňa kritériá. Zadajte heslo, ktoré má aspoň 6 znakov a
               obsahuje aspoň jedno číslo.
             </p>

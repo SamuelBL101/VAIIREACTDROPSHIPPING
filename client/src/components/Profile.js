@@ -11,6 +11,9 @@ const Profile = () => {
   const [currentUsername, setCurrentUsername] = useState("Current Username");
   const [currentEmail, setCurrentEmail] = useState("Current Email");
   const { isAuthenticated, attributes, logout } = useAuth();
+  const [passwordError, setPasswordError] = useState("");
+  const [successMessage, setSuccessMessage] = useState(""); // New state variable
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -80,18 +83,23 @@ const Profile = () => {
         });
     }
 
-    if (password !== attributes.password && passwordRegex.test(password)) {
-      // Handle password change
-      Axios.post("http://localhost:3001/api/updatePassword", {
-        user_id: attributes.id,
-        password,
-      })
-        .then((response) => {
-          console.log(response.data.message);
+    if (password !== attributes.password) {
+      if (password !== "" && !passwordRegex.test(password)) {
+        setPasswordError("Heslo musí obsahovať aspoň 6 znakov a číslo.");
+      } else {
+        // Handle password change
+        Axios.post("http://localhost:3001/api/updatePassword", {
+          user_id: attributes.id,
+          password,
         })
-        .catch((error) => {
-          console.error("Error updating password:", error);
-        });
+          .then((response) => {
+            console.log(response.data.message);
+            setSuccessMessage("Heslo bolo úspešne zmenené.");
+          })
+          .catch((error) => {
+            console.error("Error updating password:", error);
+          });
+      }
     }
   };
 
@@ -120,6 +128,8 @@ const Profile = () => {
           />
         </label>
         <br />
+        {passwordError && <p className="error-message">{passwordError}</p>}
+        {successMessage && <p className="success-message">{successMessage}</p>}
         <button type="submit">Uložit</button>
       </form>
       <button type="button" onClick={deleteAccount}>

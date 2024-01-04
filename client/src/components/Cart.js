@@ -94,6 +94,7 @@ const Cart = () => {
   const { isAuthenticated, attributes } = useAuth();
   const [totalCost, setTotalCost] = useState(0);
   const [showPayPal, setShowPayPal] = useState(false);
+  const [paymentSuccess, setPaymentSuccess] = useState(false);
 
   useEffect(() => {
     console.log("Fetching cart items for user ID:", attributes.id);
@@ -172,7 +173,7 @@ const Cart = () => {
 
   const handlePaymentSuccess = async (paypalOrder) => {
     console.log("Payment successful! PayPal Order details:", paypalOrder);
-
+    setPaymentSuccess(true);
     const user_id = attributes.id;
     // Extract relevant information from the PayPal order
     const address = paypalOrder.purchase_units[0]?.shipping?.address || {};
@@ -262,10 +263,18 @@ const Cart = () => {
         <p>Total Quantity: {totalQuantity}</p>
         <p>Total Cost: {totalCost.toFixed(2)}€</p>
 
-        {showPayPal ? (
-          <PayPall totalCost={totalCost} onSuccess={handlePaymentSuccess} />
+        {paymentSuccess ? (
+          <div className={styles["success-message"]}>
+            <p>Your order was successful!</p>
+          </div>
         ) : (
-          <button onClick={handlePayment}>Proceed to Payment</button>
+          <div>
+            {showPayPal ? (
+              <PayPall totalCost={totalCost} onSuccess={handlePaymentSuccess} />
+            ) : (
+              <button onClick={handlePayment}>Proceed to Payment</button>
+            )}
+          </div>
         )}
       </div>
     </div>

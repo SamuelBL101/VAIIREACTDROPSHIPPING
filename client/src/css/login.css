@@ -78,7 +78,7 @@
   }
 
   .inputbutton:hover {
-    background-color: #45a049;
+    background-color: #348d38;
   }
   @media screen and (max-width: 768px) {
     .titleContainer, .endContainer {

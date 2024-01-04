@@ -310,20 +310,30 @@ app.post("/api/updateEmail", (req, res) => {
   });
 });
 
-app.post("/api/updatePassword", (req, res) => {
+app.post("/api/updatePassword", async (req, res) => {
   const user_id = req.body.user_id;
-  const password = req.body.password;
-  const sqlUpdate = "UPDATE user_inf SET password = ? WHERE user_id = ?";
-  db.query(sqlUpdate, [password, user_id], (err, result) => {
-    if (err) {
-      console.error("Error updating password:", err);
-      res.status(500).json({ message: "Internal Server Error" });
-    } else {
-      res
-        .status(200)
-        .json({ message: "Password updated successfully", result });
-    }
-  });
+  const plainPassword = req.body.password;
+
+  try {
+    // Hash the password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(plainPassword, salt);
+
+    const sqlUpdate = "UPDATE user_inf SET password = ? WHERE user_id = ?";
+    db.query(sqlUpdate, [hashedPassword, user_id], (err, result) => {
+      if (err) {
+        console.error("Error updating password:", err);
+        res.status(500).json({ message: "Internal Server Error" });
+      } else {
+        res
+          .status(200)
+          .json({ message: "Password updated successfully", result });
+      }
+    });
+  } catch (error) {
+    console.error("Error hashing password:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
 });
 app.post("/api/getrole", (req, res) => {
   const user_id = req.body.user_id;

@@ -460,6 +460,66 @@ app.post("/api/removeCartItems", (req, res) => {
   });
 });
 
+app.post("/api/deleteOrder", (req, res) => {
+  const order_id = req.body.order_id;
+
+  // SQL query to delete an order from the 'orders' table
+  const sqlDeleteOrder = "DELETE FROM orders WHERE order_id = ?";
+  db.query(sqlDeleteOrder, [order_id], (err, result) => {
+    if (err) {
+      console.error("Error deleting order:", err);
+      res.status(500).json({ message: "Internal Server Error" });
+    } else {
+      res.json({ message: "Order deleted successfully" });
+    }
+  });
+});
+/*
+app.post("/api/deleteOrderDetails", (req, res) => {
+  const order_id = req.body.order_id;
+
+  // SQL query to delete order details from the 'order_details' table
+  const sqlDeleteOrderDetails = "DELETE FROM order_details WHERE order_id = ?";
+  db.query(sqlDeleteOrderDetails, [order_id], (err, result) => {
+    if (err) {
+      console.error("Error deleting order details:", err);
+      res.status(500).json({ message: "Internal Server Error" });
+    } else {
+      res.json({ message: "Order details deleted successfully" });
+    }
+  });
+});
+*/
+app.delete("/api/deleteOrder/:id", (req, res) => {
+  const orderId = parseInt(req.params.id);
+
+  // Find the index of the order with the specified ID
+  const orderIndex = orders.findIndex((order) => order.order_id === orderId);
+
+  if (orderIndex !== -1) {
+    // Remove the order from the array
+    orders.splice(orderIndex, 1);
+
+    // Respond with success
+    res.json({ message: "Order deleted successfully" });
+  } else {
+    // Respond with an error if the order is not found
+    res.status(404).json({ error: "Order not found" });
+  }
+});
+
+app.get("/api/getOrders", (req, res) => {
+  const sql = "SELECT * FROM orders";
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.error("Error fetching orders:", err);
+      res.status(500).json({ message: "Internal Server Error" });
+    } else {
+      res.send(result);
+    }
+  });
+});
+
 app.listen(3001, () => {
   console.log("Running on port 3001");
 });

@@ -1,18 +1,28 @@
 // Importing necessary modules from React
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../css/CustomNavbar.css"; // Import styles for navbar
-import { useAuth } from 'react-auth-verification-context'; // Import useAuth
-import { NavDropdown } from 'react-bootstrap';
-import { DropdownItem as MenuItem } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css'; // Import styles for bootstrap
+import { useAuth } from "react-auth-verification-context"; // Import useAuth
+import { NavDropdown } from "react-bootstrap";
+import { DropdownItem as MenuItem } from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css"; // Import styles for bootstrap
 
 // Component for navigation panel
 const CustomNavbar = () => {
   const { isAuthenticated, attributes, logout } = useAuth(); // Include logout in the destructuring
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
+  };
+  const orderClicked = () => {
+    navigate("/Orders");
+  };
+  const productsClicked = () => {
+    navigate("/Products");
+  };
+  const usersClicked = () => {
+    navigate("/Users");
   };
 
   return (
@@ -41,9 +51,9 @@ const CustomNavbar = () => {
               </Link>
               {attributes.role === 1 && (
                 <NavDropdown title="Admin" id="basic-nav-dropdown">
-                  <MenuItem href="/Admin">Admin</MenuItem>
-                  <MenuItem href="/Admin/Products">Products</MenuItem>
-                  <MenuItem href="/Admin/Users">Users</MenuItem>
+                  <MenuItem onClick={orderClicked}>Orders</MenuItem>
+                  <MenuItem onClick={productsClicked}>Products</MenuItem>
+                  <MenuItem onClick={usersClicked}>Users</MenuItem>
                 </NavDropdown>
               )}
               <Link to="/Cart" className="navbar-link">

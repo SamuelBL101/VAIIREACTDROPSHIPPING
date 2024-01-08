@@ -272,7 +272,9 @@ const Cart = () => {
             {showPayPal ? (
               <PayPall totalCost={totalCost} onSuccess={handlePaymentSuccess} />
             ) : (
-              <button onClick={handlePayment}>Proceed to Payment</button>
+              <button onClick={handlePayment}>
+                Pokračovať s povinnosťou platby
+              </button>
             )}
           </div>
         )}

@@ -490,6 +490,7 @@ app.post("/api/deleteOrderDetails", (req, res) => {
   });
 });
 */
+/*
 app.delete("/api/deleteOrder/:id", (req, res) => {
   const orderId = parseInt(req.params.id);
 
@@ -507,6 +508,21 @@ app.delete("/api/deleteOrder/:id", (req, res) => {
     res.status(404).json({ error: "Order not found" });
   }
 });
+*/
+app.delete("/api/deleteOrder/:id", (req, res) => {
+  const orderId = parseInt(req.params.id);
+
+  // SQL query to delete an order from the 'orders' table
+  const sqlDeleteOrder = "DELETE FROM orders WHERE order_id = ?";
+  db.query(sqlDeleteOrder, [orderId], (err, result) => {
+    if (err) {
+      console.error("Error deleting order:", err);
+      res.status(500).json({ message: "Internal Server Error" });
+    } else {
+      res.json({ message: "Order deleted successfully" });
+    }
+  });
+});
 
 app.get("/api/getOrders", (req, res) => {
   const sql = "SELECT * FROM orders";
@@ -516,6 +532,33 @@ app.get("/api/getOrders", (req, res) => {
       res.status(500).json({ message: "Internal Server Error" });
     } else {
       res.send(result);
+    }
+  });
+});
+
+app.get("/api/getUsers", (req, res) => {
+  const sql = "SELECT * FROM user_inf";
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.error("Error fetching users:", err);
+      res.status(500).json({ message: "Internal Server Error" });
+    } else {
+      res.send(result);
+    }
+  });
+});
+
+app.delete("/api/deleteUser/:id", (req, res) => {
+  const userId = parseInt(req.params.id);
+
+  // SQL query to delete a user from the 'user_inf' table
+  const sqlDeleteUser = "DELETE FROM user_inf WHERE user_id = ?";
+  db.query(sqlDeleteUser, [userId], (err, result) => {
+    if (err) {
+      console.error("Error deleting user:", err);
+      res.status(500).json({ message: "Internal Server Error" });
+    } else {
+      res.json({ message: "User deleted successfully" });
     }
   });
 });

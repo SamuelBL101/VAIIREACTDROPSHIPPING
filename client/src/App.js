@@ -9,6 +9,7 @@ import Cart from "./components/Cart";
 import Profile from "./components/Profile";
 import PayPall from "./components/PayPall";
 import Orders from "./components/Orders";
+import Users from "./components/Users";
 import { AuthProvider, useAuth } from "react-auth-verification-context";
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
             <Route path="/Profile" element={<Profile />} />
             <Route path="/PayPall" element={<PayPall />} />
             <Route path="/Orders" element={<Orders />} />
+            <Route path="/Users" element={<Users />} />
           </Routes>
         </div>
       </Router>

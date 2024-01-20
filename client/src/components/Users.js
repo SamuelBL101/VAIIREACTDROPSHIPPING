@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "react-auth-verification-context";
 import Axios from "axios";
-
+import "../css/AdminUsersPage.css";
 const AdminUsersPage = () => {
   const { isAuthenticated, attributes } = useAuth();
   const isAdmin = isAuthenticated && attributes.role === 1;
@@ -43,15 +43,15 @@ const AdminUsersPage = () => {
   };
 
   return isAdmin ? (
-    <div>
-      <h2>Admin Users Page</h2>
-      <div>
-        <table>
+    <div className="admin-users-page">
+      <h2>Admin- Zoznam Použivateľov</h2>
+      <div className="user-table">
+        <table className="table table-bordered">
           <thead>
             <tr>
               <th>Email</th>
-              <th>Username</th>
-              <th>Actions</th>
+              <th>Prihlasovacie meno</th>
+              <th>Akcia</th>
             </tr>
           </thead>
           <tbody>
@@ -60,11 +60,17 @@ const AdminUsersPage = () => {
                 <td>{user.email}</td>
                 <td>{user.username}</td>
                 <td>
-                  <button onClick={() => handleDeleteUser(user.user_id)}>
-                    Delete
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => handleDeleteUser(user.user_id)}
+                  >
+                    Odstrániť
                   </button>
-                  <button onClick={() => handleChangeRole(user.user_id)}>
-                    Change Role
+                  <button
+                    className="btn btn-info"
+                    onClick={() => handleChangeRole(user.user_id)}
+                  >
+                    Zmeniť rolu
                   </button>
                 </td>
               </tr>

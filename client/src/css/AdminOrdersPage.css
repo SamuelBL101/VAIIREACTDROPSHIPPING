@@ -1,0 +1,78 @@
+/* AdminOrdersPage.css */
+
+.admin-container {
+    padding: 20px;
+  }
+  
+  .filters-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  .filter-select {
+    width: 150px;
+  }
+  
+  .filter-input {
+    width: 150px;
+  }
+  
+  .filter-button {
+    background-color: #4CAF50;
+    color: white;
+  }
+  
+  .sort-buttons-container {
+    margin-top: 10px;
+  }
+  
+  .sort-button {
+    background-color: #008CBA;
+    color: white;
+  }
+  
+  .table-container {
+    margin-top: 20px;
+  }
+  
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .table th,
+  .table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  .table th {
+    background-color: #f2f2f2;
+  }
+  
+  .table-row {
+    margin-bottom: 10px;
+  }
+  
+  .action-buttons-container {
+    button {
+      margin-right: 5px;
+    }
+  }
+  
+  .confirm-button {
+    background-color: #4CAF50;
+    color: white;
+  }
+  
+  .update-button {
+    background-color: #007BFF;
+    color: white;
+  }
+  
+  .delete-button {
+    background-color: #DC3545;
+    color: white;
+  }

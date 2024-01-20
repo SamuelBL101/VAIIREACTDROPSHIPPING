@@ -1,7 +1,7 @@
 import Axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "react-auth-verification-context";
-
+import "../css/AdminOrdersPage.css";
 const AdminOrdersPage = () => {
   const { isAuthenticated, attributes } = useAuth(); // Assuming useAuth provides user information
   const isAdmin = isAuthenticated && attributes.role === 1; // Assuming role 1 is for admin
@@ -115,95 +115,102 @@ const AdminOrdersPage = () => {
 
   return isAdmin ? (
     // Admin view
-    <div>
+    <div className="admin-container">
       {/* Filters */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          marginBottom: "20px",
-        }}
-      >
-        <select onChange={handleFilterChange} value={statusFilter}>
+      <div className="filters-container">
+        <select
+          className="filter-select"
+          onChange={handleFilterChange}
+          value={statusFilter}
+        >
           <option value="All">All</option>
           <option value="Pending">Pending</option>
           <option value="Confirmed">Confirmed</option>
           {/* Add more status options as needed */}
         </select>
+        <label htmlFor="price">Minimálna cena:</label>
         <input
+          className="filter-input"
           type="number"
           name="price"
           placeholder="Enter minimum price"
           value={priceFilter}
           onChange={handleFilterChange}
         />
-        <button onClick={handleApplyFilters}>Aplikovať Filter</button>
+        <button className="filter-button" onClick={handleApplyFilters}>
+          Aplikovať Filter
+        </button>
 
         {/* Add more filters as needed */}
       </div>
-      <div>
+      <div className="sort-buttons-container">
         {/* Buttons for sorting */}
 
-        <button onClick={() => handleSortChange("number")}>
+        <button
+          className="sort-button"
+          onClick={() => handleSortChange("number")}
+        >
           Zoradiť podľa čísla objednávky
         </button>
-        <button onClick={() => handleSortChange("date")}>
+        <button
+          className="sort-button"
+          onClick={() => handleSortChange("date")}
+        >
           Zoradiť podľa dátumu objednávky
         </button>
-        <button onClick={() => handleSortChange("price")}>
+        <button
+          className="sort-button"
+          onClick={() => handleSortChange("price")}
+        >
           Zoradiť podľa ceny{" "}
         </button>
       </div>
 
       {/* Orders */}
-      <div>
-        {/* Table header */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            marginBottom: "10px",
-          }}
-        >
-          <div>ID objednávky</div>
-          <div>ID používateľa</div>
-          <div>Dátum objednávky</div>
-          <div>Cena</div>
-          <div>Možnosti</div>
-        </div>
-
-        {/* Table rows */}
-        {filteredOrders.map((order) => (
-          <div
-            key={order.order_id}
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              marginBottom: "10px",
-            }}
-          >
-            <div style={{ minWidth: "30px" }}>{order.order_id}</div>
-            <div style={{ minWidth: "30px" }}>{order.user_id}</div>
-            <div style={{ minWidth: "30px" }}>
-              {new Date(order.orderdate).toLocaleDateString()}
-            </div>
-            <div className="priceItem" style={{ minWidth: "30px" }}>
-              {order.total_cost}
-            </div>
-            <div>
-              {/* Buttons for actions */}
-              <button onClick={() => handleConfirm(order.order_id)}>
-                Potvrdiť
-              </button>
-              <button onClick={() => handleUpdate(order.order_id)}>
-                Aktualizovať
-              </button>
-              <button onClick={() => handleDelete(order.order_id)}>
-                Odstaniť
-              </button>
-            </div>
-          </div>
-        ))}
+      <div className="table-container">
+        <table className="table">
+          <thead>
+            <tr>
+              <th>ID objednávky</th>
+              <th>ID používateľa</th>
+              <th>Dátum objednávky</th>
+              <th>Cena</th>
+              <th>Možnosti</th>
+            </tr>
+          </thead>
+          {/* Table rows */}
+          <tbody>
+            {filteredOrders.map((order) => (
+              <tr key={order.order_id} className="table-row">
+                <td>{order.order_id}</td>
+                <td>{order.user_id}</td>
+                <td>{new Date(order.orderdate).toLocaleDateString()}</td>
+                <td className="priceItem">{order.total_cost}</td>
+                <td className="action-buttons-container">
+                  {/* Buttons for actions */}
+                  <button
+                    className="confirm-button"
+                    onClick={() => handleConfirm(order.order_id)}
+                  >
+                    Potvrdiť
+                  </button>
+                  <button
+                    className="update-button"
+                    onClick={() => handleUpdate(order.order_id)}
+                  >
+                    Aktualizovať
+                  </button>
+                  <button
+                    className="delete-button"
+                    onClick={() => handleDelete(order.order_id)}
+                  >
+                    Odstaniť
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   ) : (

@@ -5,21 +5,37 @@ import CategoryList from "./CategoryList.js"; // Importovaný súbor pre zoznam 
 
 const Home = () => {
   const [cart, setCart] = useState([]);
+  const [searchInput, setSearchInput] = useState("");
 
   const addToCart = (product) => {
     setCart([...cart, product]);
   };
-
+  const handleSearch = () => {
+    // Implement logic to update state or trigger callback to filter products
+    // For example, you can set the search string in the state and pass it to ProductList
+    // Or directly trigger a filter function in ProductList
+  };
   return (
     <div>
       <div id="content-container">
-        <nav id="sidebar-categories">
-          <CategoryList />
-        </nav>
+        <div id="search-bar">
+          <div id="find-product">
+            <input
+              type="text"
+              placeholder="Vyhľadať"
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+            />
+            <br />
+            <button type="submit">Hľadať</button>
+          </div>
+          <nav id="sidebar-categories">
+            <CategoryList />
+          </nav>
+        </div>
         <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4">
           <h2>Domovská stránka</h2>
-          {/* Ďalší obsah domovskej stránky */}
-          <ProductList addToCart={addToCart} />
+          <ProductList addToCart={addToCart} searchInput={searchInput} />
         </main>
       </div>
     </div>

@@ -13,11 +13,15 @@ import Users from "./components/Users";
 import { AuthProvider, useAuth } from "react-auth-verification-context";
 
 function App() {
+  const [searchKeyword, setSearchKeyword] = useState("");
+  const handleSearch = (keyword) => {
+    setSearchKeyword(keyword);
+  };
   return (
     <AuthProvider>
       <Router>
         <div className="App">
-          <CustomNavbar />
+          <CustomNavbar onSearch={handleSearch} />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/Login" element={<Login />} />

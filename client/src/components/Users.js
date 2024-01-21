@@ -44,9 +44,29 @@ const AdminUsersPage = () => {
   };
 
   const handleChangeRole = (userId) => {
-    // You can implement logic to change the user's role
-    // For example, make a request to the server to update the user's role
     console.log(`Change role for user ${userId}`);
+    const newRole =
+      users.find((user) => user.user_id === userId).role === 1 ? 0 : 1;
+
+    // Make a PUT request to update the user role
+    Axios.post(`http://localhost:3001/api/changeRole/${userId}`, {
+      role: newRole,
+    })
+      .then((response) => {
+        console.log("User role updated successfully:", response.data);
+        // Update the state with the updated users array
+        setUsers((prevUsers) =>
+          prevUsers.map((user) =>
+            user.user_id === userId ? { ...user, role: newRole } : user
+          )
+        );
+        // Handle any UI updates or additional logic as needed
+      })
+      .catch((error) => {
+        console.error("Error updating user role:", error);
+        // Handle errors
+      });
+    // Update the state with the updated users array
   };
 
   return isAdmin ? (
@@ -58,6 +78,7 @@ const AdminUsersPage = () => {
             <tr>
               <th>Email</th>
               <th>Prihlasovacie meno</th>
+              <th>Rola</th>
               <th>Akcia</th>
             </tr>
           </thead>
@@ -66,6 +87,7 @@ const AdminUsersPage = () => {
               <tr key={user.user_id}>
                 <td>{user.email}</td>
                 <td>{user.username}</td>
+                <td>{user.role}</td>
                 <td>
                   <button
                     className="btn btn-danger"

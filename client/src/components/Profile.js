@@ -187,12 +187,22 @@ const Profile = () => {
       <form onSubmit={handleSubmit} className="profile-form">
         <label>
           Používateľské meno:
-          <input type="text" value={name} onChange={handleNameChange} />
+          <input
+            type="text"
+            value={name}
+            onChange={handleNameChange}
+            placeholder="Zadajte používateľské meno"
+          />
         </label>
         <br />
         <label>
           Email:
-          <input type="email" value={email} onChange={handleEmailChange} />
+          <input
+            type="email"
+            value={email}
+            onChange={handleEmailChange}
+            placeholder="Zadajte e-mailovú adresu"
+          />
         </label>
         <br />
         <label>
@@ -201,6 +211,7 @@ const Profile = () => {
             type="password"
             value={password}
             onChange={handlePasswordChange}
+            placeholder="Zadajte heslo"
           />
         </label>
         <br />
@@ -216,7 +227,7 @@ const Profile = () => {
         <button type="submit">Uložit</button>
       </form>
       <button type="button" onClick={deleteAccount} className="delete-button">
-        Odstraň účet
+        Odstrániť účet
       </button>
     </div>
   );

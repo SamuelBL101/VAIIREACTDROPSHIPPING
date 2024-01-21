@@ -56,7 +56,7 @@ const Product = ({ id, title, price, imgSrc }) => {
   );
 };
 
-const ProductList = () => {
+const ProductList = ({ addToCart, searchInput }) => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -69,9 +69,12 @@ const ProductList = () => {
       });
   }, []);
 
+  const filteredProducts = products.filter((product) =>
+    product.product_name.toLowerCase().includes(searchInput.toLowerCase())
+  );
   return (
     <div className="products">
-      {products.map((product) => (
+      {filteredProducts.map((product) => (
         <Product
           key={product.product_id}
           id={product.product_id}

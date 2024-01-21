@@ -567,6 +567,22 @@ app.delete("/api/deleteUser/:id", (req, res) => {
     }
   });
 });
+app.post("/api/changeRole/:id", (req, res) => {
+  const userId = parseInt(req.params.id);
+  const newRole = req.body.role;
+
+  // SQL query to update the role of a user in the 'user_inf' table
+  const sqlUpdateRole = "UPDATE user_inf SET role = ? WHERE user_id = ?";
+
+  db.query(sqlUpdateRole, [newRole, userId], (err, result) => {
+    if (err) {
+      console.error("Error updating user role:", err);
+      res.status(500).json({ message: "Internal Server Error" });
+    } else {
+      res.json({ message: "User role updated successfully", newRole });
+    }
+  });
+});
 
 app.post("/api/updateProfileImage", upload.single("file"), async (req, res) => {
   try {

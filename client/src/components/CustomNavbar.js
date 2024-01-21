@@ -18,9 +18,6 @@ const CustomNavbar = () => {
   const orderClicked = () => {
     navigate("/Orders");
   };
-  const productsClicked = () => {
-    navigate("/Products");
-  };
   const usersClicked = () => {
     navigate("/Users");
   };
@@ -33,12 +30,12 @@ const CustomNavbar = () => {
           SalesCounter
         </Link>
 
-        {/* Search field */}
+        {/* Search field 
         <div className="navbar-search">
           <input type="text" placeholder="Vyhľadať" />
           <button type="submit">Hľadať</button>
         </div>
-
+*/}
         {/* Navigation links */}
         <div className="navbar-links">
           <Link to="/" className="navbar-link">
@@ -51,9 +48,8 @@ const CustomNavbar = () => {
               </Link>
               {attributes.role === 1 && (
                 <NavDropdown title="Admin" id="basic-nav-dropdown">
-                  <MenuItem onClick={orderClicked}>Orders</MenuItem>
-                  <MenuItem onClick={productsClicked}>Products</MenuItem>
-                  <MenuItem onClick={usersClicked}>Users</MenuItem>
+                  <MenuItem onClick={orderClicked}>Objednávky</MenuItem>
+                  <MenuItem onClick={usersClicked}>Používatelia</MenuItem>
                 </NavDropdown>
               )}
               <Link to="/Cart" className="navbar-link">

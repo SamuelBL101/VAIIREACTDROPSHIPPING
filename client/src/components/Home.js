@@ -25,9 +25,12 @@ const Home = () => {
               placeholder="Vyhľadať"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
+              className="search-input"
             />
             <br />
-            <button type="submit">Hľadať</button>
+            <button type="submit" className="add-to-cart-button">
+              Hľadať
+            </button>
           </div>
           <nav id="sidebar-categories">
             <CategoryList />

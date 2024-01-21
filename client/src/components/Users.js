@@ -32,14 +32,12 @@ const AdminUsersPage = () => {
     Axios.delete(`http://localhost:3001/api/deleteUser/${userId}`)
       .then((response) => {
         console.log(response.data.message);
-        // Update the state to reflect the deleted user
         setUsers((prevUsers) =>
           prevUsers.filter((user) => user.user_id !== userId)
         );
       })
       .catch((error) => {
         console.error("Error deleting user:", error);
-        // Handle error or show a user-friendly message
       });
   };
 
@@ -48,25 +46,20 @@ const AdminUsersPage = () => {
     const newRole =
       users.find((user) => user.user_id === userId).role === 1 ? 0 : 1;
 
-    // Make a PUT request to update the user role
     Axios.post(`http://localhost:3001/api/changeRole/${userId}`, {
       role: newRole,
     })
       .then((response) => {
         console.log("User role updated successfully:", response.data);
-        // Update the state with the updated users array
         setUsers((prevUsers) =>
           prevUsers.map((user) =>
             user.user_id === userId ? { ...user, role: newRole } : user
           )
         );
-        // Handle any UI updates or additional logic as needed
       })
       .catch((error) => {
         console.error("Error updating user role:", error);
-        // Handle errors
       });
-    // Update the state with the updated users array
   };
 
   return isAdmin ? (
@@ -109,7 +102,7 @@ const AdminUsersPage = () => {
       </div>
     </div>
   ) : (
-    <div>You do not have permission to view this page.</div>
+    <div>Nemáte povolenie na zobrazenie tejto stránky.</div>
   );
 };
 

@@ -38,12 +38,10 @@ const Register = () => {
       return;
     }
     if (!emailRegex.test(email)) {
-      // Email is not in a valid format
       setValidEmailFormat(false);
       return;
     }
     if (!passwordRegex.test(password)) {
-      // Password does not meet the criteria
       setPasswordMeetsCriteria(false);
       return;
     }
@@ -73,7 +71,6 @@ const Register = () => {
             if (response.data.auth) {
               const user = response.data.user;
               console.log(user);
-              // Corrected login function call
               login({
                 username: user.username,
                 email: user.email,
@@ -82,7 +79,6 @@ const Register = () => {
               });
             }
 
-            // Navigate to /profile
             navigate("/profile");
           })
           .catch((error) => {
@@ -93,7 +89,7 @@ const Register = () => {
         alert(
           error.response?.data?.message ||
             "An error occurred during registration"
-        ); // Updated to check for response property
+        );
       });
   };
 

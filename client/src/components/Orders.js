@@ -41,10 +41,9 @@ const AdminOrdersPage = () => {
       );
     } else {
       setSortOption(option);
-      setSortDirection("asc"); // Default to ascending order when a new option is selected
+      setSortDirection("asc");
     }
 
-    // Apply sorting immediately when the user selects a sorting option
     const sortedOrders = [...filteredOrders].sort(sortOrders);
     setFilteredOrders(sortedOrders);
   };
@@ -119,9 +118,7 @@ const AdminOrdersPage = () => {
   };
 
   return isAdmin ? (
-    // Admin view
     <div className="admin-container">
-      {/* Filters */}
       <div className="filters-container">
         <select
           className="filter-select"

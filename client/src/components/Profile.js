@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "react-auth-verification-context";
 import Axios from "axios";
 import { useNavigate } from "react-router-dom";
-import "../css/profile.css"; // Import your CSS file
+import "../css/profile.css";
 
 const Profile = () => {
   const [name, setName] = useState("");
@@ -12,10 +12,9 @@ const Profile = () => {
   const [currentEmail, setCurrentEmail] = useState("Current Email");
   const { isAuthenticated, attributes, logout } = useAuth();
   const [passwordError, setPasswordError] = useState("");
-  const [successMessage, setSuccessMessage] = useState(""); // New state variable
-  const [profilePicture, setProfilePicture] = useState(null); // New state variable
-  const [file, setFile] = useState(null); // New state variable
-
+  const [successMessage, setSuccessMessage] = useState("");
+  const [profilePicture, setProfilePicture] = useState(null);
+  const [file, setFile] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -220,7 +219,7 @@ const Profile = () => {
           <input type="file" accept="image/*" onChange={handleFileChange} />
         </label>
         <br />
-        <button onClick={handleUpload}>Zmenit profilovu fotku</button>
+        <button onClick={handleUpload}>Zmenit profilovú fotku</button>
 
         {passwordError && <p className="error-message">{passwordError}</p>}
         {successMessage && <p className="success-message">{successMessage}</p>}

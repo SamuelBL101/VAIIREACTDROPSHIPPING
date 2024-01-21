@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import '../css/style.css';
+import React, { useEffect, useState } from "react";
+import "../css/style.css";
 import Axios from "axios";
-import { useAuth } from 'react-auth-verification-context'; // Import useAuth
-import { useContext } from 'react'; // Import useContext
+import { useAuth } from "react-auth-verification-context"; // Import useAuth
+import { useContext } from "react"; // Import useContext
 
 const Product = ({ id, title, price, imgSrc }) => {
   const { isAuthenticated, attributes } = useAuth(); // Use useAuth hook to get user information
@@ -10,7 +10,7 @@ const Product = ({ id, title, price, imgSrc }) => {
   const handleAddToCart = () => {
     if (isAuthenticated) {
       Axios.post(
-        'http://localhost:3001/api/addToCart',
+        "http://localhost:3001/api/addToCart",
         {
           product_id: id,
           quantity: 1,
@@ -18,7 +18,7 @@ const Product = ({ id, title, price, imgSrc }) => {
         },
         {
           headers: {
-            'x-access-token': localStorage.getItem('token'),
+            "x-access-token": localStorage.getItem("token"),
           },
         }
       )
@@ -26,23 +26,23 @@ const Product = ({ id, title, price, imgSrc }) => {
           console.log(response.data.message); // Handle success
         })
         .catch((error) => {
-          console.error('Error adding to cart:', error); // Handle error
-          console.log('Server Response:', error.response); // Log server response
-
+          console.error("Error adding to cart:", error); // Handle error
+          console.log("Server Response:", error.response); // Log server response
         });
     } else {
       // Handle case where the user is not authenticated
-      console.log('User is not authenticated. Please log in.');
+      console.log("User is not authenticated. Please log in.");
     }
   };
-  
 
   return (
     <div className="product">
       <img src={imgSrc} alt={title} className="product-image" />
       <h3>{title}</h3>
-      <p>Cena: {price}</p>
-      <button className="add-to-cart-button" onClick={handleAddToCart}>Pridať do košíka</button>
+      <p>Cena: {price}€ </p>
+      <button className="add-to-cart-button" onClick={handleAddToCart}>
+        Pridať do košíka
+      </button>
     </div>
   );
 };
@@ -51,29 +51,28 @@ const ProductList = () => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    Axios.get('http://localhost:3001/api/products')
+    Axios.get("http://localhost:3001/api/products")
       .then((response) => {
         setProducts(response.data);
       })
       .catch((error) => {
-        console.error('Error fetching products:', error);
+        console.error("Error fetching products:", error);
       });
   }, []);
 
   return (
     <div className="products">
-      {products.map(product => (
+      {products.map((product) => (
         <Product
-        key={product.product_id}
-        id={product.product_id}
-        title={product.product_name}
-        price={product.price}
-        imgSrc={product.imgSrc}
+          key={product.product_id}
+          id={product.product_id}
+          title={product.product_name}
+          price={product.price}
+          imgSrc={product.imgSrc}
         />
       ))}
     </div>
-    
-  ); 
+  );
 };
 
 export default ProductList;

@@ -76,10 +76,10 @@ const CartItem = ({ item, updateCartItems }) => {
           </div>
           <div className={styles["cart-item-details"]}>
             <p>{productDetails.product_name}</p>
-            <p>Quantity: {item.quantity}</p>
+            <p>Počet: {item.quantity}</p>
             <button onClick={() => handleQuantityChange(1)}>+1</button>
             <button onClick={() => handleQuantityChange(-1)}>-1</button>
-            <p>Price: ${productDetails.price}</p>
+            <p>Cena za 1 kus: {productDetails.price}€</p>
           </div>
         </>
       )}
@@ -245,7 +245,7 @@ const Cart = () => {
   return (
     <div className={styles["cart-container"]}>
       <div className={styles["cart-items"]}>
-        <h2>Your Cart</h2>
+        <h2>Košík</h2>
         {loading ? (
           <p>Loading cart items...</p>
         ) : (
@@ -259,9 +259,9 @@ const Cart = () => {
         )}
       </div>
       <div className={styles["cart-summary"]}>
-        <h2>Order Summary</h2>
-        <p>Total Quantity: {totalQuantity}</p>
-        <p>Total Cost: {totalCost.toFixed(2)}€</p>
+        <h2>Prehľad objednávky</h2>
+        <p>Počet kusov: {totalQuantity}</p>
+        <p>Cena: {totalCost.toFixed(2)}€</p>
 
         {paymentSuccess ? (
           <div className={styles["success-message"]}>
@@ -272,7 +272,7 @@ const Cart = () => {
             {showPayPal ? (
               <PayPall totalCost={totalCost} onSuccess={handlePaymentSuccess} />
             ) : (
-              <button onClick={handlePayment}>
+              <button onClick={handlePayment} className={styles["pay-button"]}>
                 Pokračovať s povinnosťou platby
               </button>
             )}

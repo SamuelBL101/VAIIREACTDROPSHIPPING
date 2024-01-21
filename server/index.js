@@ -597,8 +597,11 @@ app.post("/api/updateProfileImage", upload.single("file"), async (req, res) => {
             console.error("Error updating profile image in the database:", err);
             res.status(500).json({ message: "Internal Server Error" });
           } else {
-            res.json({ message: "Profile image updated successfully" });
-            console.log("Profile image updated successfully:", result);
+            res.writeHead(200, {
+              "Content-Type": "image/jpeg",
+              "Content-Length": compressedImageBuffer.length,
+            });
+            res.end(compressedImageBuffer, "binary");
           }
         }
       );
@@ -610,6 +613,31 @@ app.post("/api/updateProfileImage", upload.single("file"), async (req, res) => {
     console.error("Error processing image:", error);
     res.status(400).json({ message: "Bad Request" });
   }
+});
+
+app.get("/api/getProfileImage/:id", (req, res) => {
+  const user_id = req.params.id;
+
+  // SQL query to get the profile image for the specified user_id
+  const sqlGetImage = "SELECT profile_picture FROM user_inf WHERE user_id = ?";
+  db.query(sqlGetImage, [user_id], (err, result) => {
+    if (err) {
+      console.error("Error fetching profile image:", err);
+      res.status(500).json({ message: "Internal Server Error" });
+    } else {
+      // Check if the result has data
+      if (result[0] && result[0].profile_picture) {
+        const imageBuffer = result[0].profile_picture;
+        res.writeHead(200, {
+          "Content-Type": "image/jpeg",
+          "Content-Length": imageBuffer.length,
+        });
+        res.end(imageBuffer, "binary");
+      } else {
+        res.status(404).json({ message: "Profile image not found" });
+      }
+    }
+  });
 });
 
 app.listen(3001, () => {

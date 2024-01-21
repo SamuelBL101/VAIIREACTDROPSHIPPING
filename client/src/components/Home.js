@@ -10,12 +10,6 @@ const Home = () => {
     setCart([...cart, product]);
   };
 
-  const removeFromCart = (index) => {
-    const newCart = [...cart];
-    newCart.splice(index, 1);
-    setCart(newCart);
-  };
-
   return (
     <div>
       <div id="content-container">
@@ -25,7 +19,7 @@ const Home = () => {
         <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4">
           <h2>Domovská stránka</h2>
           {/* Ďalší obsah domovskej stránky */}
-          <ProductList addToCart={addToCart}/>
+          <ProductList addToCart={addToCart} />
         </main>
       </div>
     </div>

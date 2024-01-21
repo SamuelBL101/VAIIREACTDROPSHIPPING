@@ -47,6 +47,7 @@
   }
   
   .delete-button {
+    margin-top: 10px;
     background-color: #e74c3c;
     color: #fff;
     border: none;
@@ -59,3 +60,10 @@
     background-color: #c0392b;
   }
   
+  .profile-img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin: 20px auto;
+    display: block;
+  }

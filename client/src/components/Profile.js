@@ -21,14 +21,19 @@ const Profile = () => {
   useEffect(() => {
     setCurrentUsername(attributes.username);
     setCurrentEmail(attributes.email);
-
-    if (
-      attributes.profile_picture &&
-      attributes.profile_picture.type === "Buffer"
-    ) {
-      const base64Image = arrayBufferToBase64(attributes.profile_picture.data);
-      setProfilePicture(`data:image/jpeg;base64,${base64Image}`);
-    }
+    Axios.get(`http://localhost:3001/api/getProfileImage/${attributes.id}`, {
+      responseType: "arraybuffer",
+    })
+      .then((response) => {
+        if (response.data) {
+          const base64Image = arrayBufferToBase64(response.data);
+          console.log("Profile image:", response.data);
+          setProfilePicture(`data:image/jpeg;base64,${base64Image}`);
+        }
+      })
+      .catch((error) => {
+        console.error("Error getting profile image:", error);
+      });
   }, [attributes]);
 
   function arrayBufferToBase64(buffer) {
@@ -72,7 +77,8 @@ const Profile = () => {
     const selectedFile = e.target.files[0];
     setFile(selectedFile);
   };
-  const handleUpload = () => {
+  const handleUpload = (e) => {
+    e.preventDefault();
     // Create a FormData object to send the file
     const formData = new FormData();
     formData.append("file", file);
@@ -88,6 +94,22 @@ const Profile = () => {
     })
       .then((response) => {
         console.log("Image uploaded successfully:", response.data);
+        Axios.get(
+          `http://localhost:3001/api/getProfileImage/${attributes.id}`,
+          {
+            responseType: "arraybuffer",
+          }
+        )
+          .then((response) => {
+            if (response.data) {
+              const base64Image = arrayBufferToBase64(response.data);
+              console.log("Profile image:", response.data);
+              setProfilePicture(`data:image/jpeg;base64,${base64Image}`);
+            }
+          })
+          .catch((error) => {
+            console.error("Error getting profile image:", error);
+          });
       })
       .catch((error) => {
         console.error("Error uploading image:", error);
@@ -156,10 +178,12 @@ const Profile = () => {
 
   return (
     <div className="profile-container">
-      <h1>Profile Settings</h1>
-      <p>Username: {currentUsername}</p>
+      <h1>Nastavenia Profilu</h1>
+      <p>Používateľské meno: {currentUsername}</p>
       <p>Email: {currentEmail}</p>
-      {profilePicture && <img src={profilePicture} alt="Profile" />}
+      {profilePicture && (
+        <img src={profilePicture} alt="Profile" className="profile-img" />
+      )}
       <form onSubmit={handleSubmit} className="profile-form">
         <label>
           Používateľské meno:
@@ -181,18 +205,18 @@ const Profile = () => {
         </label>
         <br />
         <label>
-          Profile Picture:
+          Profilový obrázok:
           <input type="file" accept="image/*" onChange={handleFileChange} />
         </label>
         <br />
-        <button onClick={handleUpload}>Upload Image</button>
+        <button onClick={handleUpload}>Zmenit profilovu fotku</button>
 
         {passwordError && <p className="error-message">{passwordError}</p>}
         {successMessage && <p className="success-message">{successMessage}</p>}
         <button type="submit">Uložit</button>
       </form>
-      <button type="button" onClick={deleteAccount}>
-        DeleteAccount
+      <button type="button" onClick={deleteAccount} className="delete-button">
+        Odstraň účet
       </button>
     </div>
   );

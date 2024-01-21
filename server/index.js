@@ -4,6 +4,9 @@ const cors = require("cors");
 const app = express();
 const mysql = require("mysql2");
 const bcrypt = require("bcrypt");
+const multer = require("multer");
+const sharp = require("sharp");
+
 //npm run devStart
 
 const jwt = require("jsonwebtoken");
@@ -19,6 +22,8 @@ const db = mysql.createPool({
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+const storage = multer.memoryStorage(); // Store files in memory (you can adjust this based on your requirements)
+const upload = multer({ storage: storage });
 
 app.post("/api/insertUser", async (req, res) => {
   const username = req.body.username;
@@ -561,6 +566,50 @@ app.delete("/api/deleteUser/:id", (req, res) => {
       res.json({ message: "User deleted successfully" });
     }
   });
+});
+
+app.post("/api/updateProfileImage", upload.single("file"), async (req, res) => {
+  try {
+    const user_id = req.body.user_id;
+    const imageBuffer = req.file.buffer;
+
+    // Use sharp to resize and compress the image
+    const compressedImageBuffer = await sharp(imageBuffer)
+      .resize({ width: 256 }) // Set the desired width
+      .toBuffer();
+    console.log(
+      "Compressed image buffer:",
+      compressedImageBuffer.toString("base64")
+    );
+
+    // Further check on the compressed size
+    if (compressedImageBuffer.length < 65535) {
+      console.log("Compressed image size is within the allowed limit.");
+
+      // Update profile image in the database
+      const sqlUpdateImage =
+        "UPDATE user_inf SET profile_picture = ? WHERE user_id = ?";
+      db.query(
+        sqlUpdateImage,
+        [compressedImageBuffer, user_id],
+        (err, result) => {
+          if (err) {
+            console.error("Error updating profile image in the database:", err);
+            res.status(500).json({ message: "Internal Server Error" });
+          } else {
+            res.json({ message: "Profile image updated successfully" });
+            console.log("Profile image updated successfully:", result);
+          }
+        }
+      );
+    } else {
+      console.log("Compressed image size exceeds the allowed limit.");
+      res.status(400).json({ message: "Image size exceeds the allowed limit" });
+    }
+  } catch (error) {
+    console.error("Error processing image:", error);
+    res.status(400).json({ message: "Bad Request" });
+  }
 });
 
 app.listen(3001, () => {

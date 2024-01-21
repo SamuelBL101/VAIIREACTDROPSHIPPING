@@ -13,14 +13,35 @@ const Profile = () => {
   const { isAuthenticated, attributes, logout } = useAuth();
   const [passwordError, setPasswordError] = useState("");
   const [successMessage, setSuccessMessage] = useState(""); // New state variable
+  const [profilePicture, setProfilePicture] = useState(null); // New state variable
+  const [file, setFile] = useState(null); // New state variable
 
   const navigate = useNavigate();
 
   useEffect(() => {
     setCurrentUsername(attributes.username);
     setCurrentEmail(attributes.email);
+
+    if (
+      attributes.profile_picture &&
+      attributes.profile_picture.type === "Buffer"
+    ) {
+      const base64Image = arrayBufferToBase64(attributes.profile_picture.data);
+      setProfilePicture(`data:image/jpeg;base64,${base64Image}`);
+    }
   }, [attributes]);
 
+  function arrayBufferToBase64(buffer) {
+    if (!buffer) return null;
+
+    let binary = "";
+    const bytes = new Uint8Array(buffer);
+    const len = bytes.byteLength;
+    for (let i = 0; i < len; i++) {
+      binary += String.fromCharCode(bytes[i]);
+    }
+    return window.btoa(binary);
+  }
   const deleteAccount = () => {
     Axios.post("http://localhost:3001/api/deleteAccount", {
       user_id: attributes.id,
@@ -46,6 +67,32 @@ const Profile = () => {
 
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
+  };
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    setFile(selectedFile);
+  };
+  const handleUpload = () => {
+    // Create a FormData object to send the file
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("user_id", attributes.id); // Add this line to include user_id
+
+    Axios.post("http://localhost:3001/api/updateProfileImage", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      data: {
+        user_id: attributes.id, // Replace with the actual user_id
+      },
+    })
+      .then((response) => {
+        console.log("Image uploaded successfully:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error uploading image:", error);
+        // Handle error
+      });
   };
 
   const handleSubmit = (e) => {
@@ -84,21 +131,25 @@ const Profile = () => {
     }
 
     if (password !== attributes.password) {
-      if (password !== "" && !passwordRegex.test(password)) {
-        setPasswordError("Heslo musí obsahovať aspoň 6 znakov a číslo.");
-      } else {
-        // Handle password change
-        Axios.post("http://localhost:3001/api/updatePassword", {
-          user_id: attributes.id,
-          password,
-        })
-          .then((response) => {
-            console.log(response.data.message);
-            setSuccessMessage("Heslo bolo úspešne zmenené.");
+      if (password !== "") {
+        if (!passwordRegex.test(password)) {
+          setPasswordError("Heslo musí obsahovať aspoň 6 znakov a číslo.");
+        } else {
+          // Handle password change
+          Axios.post("http://localhost:3001/api/updatePassword", {
+            user_id: attributes.id,
+            password,
           })
-          .catch((error) => {
-            console.error("Error updating password:", error);
-          });
+            .then((response) => {
+              console.log(response.data.message);
+              setSuccessMessage("Heslo bolo úspešne zmenené.");
+            })
+            .catch((error) => {
+              console.error("Error updating password:", error);
+            });
+        }
+      } else {
+        setPasswordError("Heslo musí obsahovať aspoň 6 znakov a číslo.");
       }
     }
   };
@@ -108,6 +159,7 @@ const Profile = () => {
       <h1>Profile Settings</h1>
       <p>Username: {currentUsername}</p>
       <p>Email: {currentEmail}</p>
+      {profilePicture && <img src={profilePicture} alt="Profile" />}
       <form onSubmit={handleSubmit} className="profile-form">
         <label>
           Používateľské meno:
@@ -128,6 +180,13 @@ const Profile = () => {
           />
         </label>
         <br />
+        <label>
+          Profile Picture:
+          <input type="file" accept="image/*" onChange={handleFileChange} />
+        </label>
+        <br />
+        <button onClick={handleUpload}>Upload Image</button>
+
         {passwordError && <p className="error-message">{passwordError}</p>}
         {successMessage && <p className="success-message">{successMessage}</p>}
         <button type="submit">Uložit</button>

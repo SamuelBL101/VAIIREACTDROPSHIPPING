@@ -28,7 +28,9 @@ const Login = () => {
             email: user.email,
             id: user.user_id,
             role: user.role,
+            profile_picture: user.profile_picture,
           });
+          console.log("User: ", user);
           navigate("/");
         } else {
           //alert("Invalid username or password");

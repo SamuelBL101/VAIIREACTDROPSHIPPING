@@ -29,10 +29,10 @@
     }
   }
   #myCarousel img {
-    height: 300px;
+    height: 301px;
   }
   .image-container {
-    background-color: blue; /* Modré pozadie */
+    background-color: blue; 
     padding: 5px; /* Odsadenie obrázku od okraja */
   }
   /* Štýly pre kontajner produktov a bočného panelu */
@@ -70,7 +70,7 @@
   }
 
   .product {
-    width: calc(33.33% - 20px); /* Každý produkt zaberá 1/3 šírky s 10px oddeľovačom */
+    width: calc(33.33% - 20px); 
     margin-top: 10px;
     margin-bottom: 20px; /* Odstup medzi produktami */
   }
@@ -80,7 +80,6 @@
     }
   }
   
-  /* Further adjustment for even smaller screens (adjust the breakpoint as needed) */
   @media screen and (max-width: 480px) {
     .product {
       width: 100%; /* One item per row */
@@ -88,8 +87,8 @@
   }
 
   .product-image {
-    width: 225px; /* Nastavte žiadanú šírku obrázka */
-    height: 200px; /* Zachová pomer strán obrázka */
+    width: 225px; 
+    height: 200px; 
   }
   .category-list li {
     margin-bottom: 8px; /* oddeľovač medzi jednotlivými kategóriami */
@@ -109,12 +108,12 @@
   }
   .category-list a {
     text-decoration: none;
-    color: #007bff; /* modrá farba textu */
+    color: #007bff; 
     font-weight: bold;
     transition: color 0.3s;
   }
   .category-list a:hover {
-    color: #0056b3; /* tmavšia modrá farba textu pri najazdení myšou */
+    color: #0056b3; 
   }
   .add-to-cart-button {
     background-color: #007bff;

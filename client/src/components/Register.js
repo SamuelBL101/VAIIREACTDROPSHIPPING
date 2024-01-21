@@ -5,6 +5,11 @@ import { useAuth } from "react-auth-verification-context";
 import { Link, useNavigate } from "react-router-dom";
 import Login from "./Login";
 
+/**
+ * Register component for user registration.
+ *
+ * @returns {JSX.Element} The Register component.
+ */
 const Register = () => {
   const { isAuthenticated, attributes } = useAuth();
   const navigate = useNavigate();

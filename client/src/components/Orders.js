@@ -2,6 +2,11 @@ import Axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "react-auth-verification-context";
 import "../css/AdminOrdersPage.css";
+/**
+ * Renders the admin orders page.
+ *
+ * @returns {JSX.Element} The admin orders page component.
+ */
 const AdminOrdersPage = () => {
   const { isAuthenticated, attributes } = useAuth(); // Assuming useAuth provides user information
   const isAdmin = isAuthenticated && attributes.role === 1; // Assuming role 1 is for admin

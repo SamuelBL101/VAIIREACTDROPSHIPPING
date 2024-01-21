@@ -577,10 +577,6 @@ app.post("/api/updateProfileImage", upload.single("file"), async (req, res) => {
     const compressedImageBuffer = await sharp(imageBuffer)
       .resize({ width: 256 }) // Set the desired width
       .toBuffer();
-    console.log(
-      "Compressed image buffer:",
-      compressedImageBuffer.toString("base64")
-    );
 
     // Further check on the compressed size
     if (compressedImageBuffer.length < 65535) {

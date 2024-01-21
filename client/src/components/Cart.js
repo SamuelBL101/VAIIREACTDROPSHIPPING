@@ -55,7 +55,7 @@ const CartItem = ({ item, updateCartItems }) => {
           });
       })
       .catch((error) => {
-        console.error("Error updating cart item:", error); // Handle error
+        console.error("Error updating cart item:", error);
       });
   };
 
@@ -175,7 +175,6 @@ const Cart = () => {
     console.log("Payment successful! PayPal Order details:", paypalOrder);
     setPaymentSuccess(true);
     const user_id = attributes.id;
-    // Extract relevant information from the PayPal order
     const address = paypalOrder.purchase_units[0]?.shipping?.address || {};
     const {
       address_line_1 = "",

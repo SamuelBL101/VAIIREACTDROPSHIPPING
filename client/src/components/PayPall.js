@@ -3,6 +3,14 @@
 
 import React, { useRef, useEffect } from "react";
 
+/**
+ * Renders a PayPal payment component.
+ *
+ * @param {Object} props - The component props.
+ * @param {number} props.totalCost - The total cost of the purchase.
+ * @param {Function} props.onSuccess - The callback function to be called on successful payment.
+ * @returns {JSX.Element} The PayPal payment component.
+ */
 const PayPal = ({ totalCost, onSuccess }) => {
   const paypal = useRef();
 

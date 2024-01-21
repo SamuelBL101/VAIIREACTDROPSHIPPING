@@ -4,6 +4,15 @@ import Axios from "axios";
 import { useAuth } from "react-auth-verification-context"; // Import useAuth
 import { useContext } from "react"; // Import useContext
 
+/**
+ * Represents a product component.
+ * @param {Object} props - The props object containing the product information.
+ * @param {string} props.id - The unique identifier of the product.
+ * @param {string} props.title - The title of the product.
+ * @param {number} props.price - The price of the product.
+ * @param {string} props.imgSrc - The image source of the product.
+ * @returns {JSX.Element} The rendered product component.
+ */
 const Product = ({ id, title, price, imgSrc }) => {
   const { isAuthenticated, attributes } = useAuth(); // Use useAuth hook to get user information
 

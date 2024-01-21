@@ -2,6 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "react-auth-verification-context";
 import Axios from "axios";
 import "../css/AdminUsersPage.css";
+/**
+ * Renders the Admin Users Page component.
+ * This component displays a table of users with their email, username, and actions.
+ * Only authenticated users with the role of admin can view this page.
+ *
+ * @returns {JSX.Element} The rendered Admin Users Page component.
+ */
 const AdminUsersPage = () => {
   const { isAuthenticated, attributes } = useAuth();
   const isAdmin = isAuthenticated && attributes.role === 1;
